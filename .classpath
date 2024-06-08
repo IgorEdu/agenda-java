@@ -6,7 +6,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/darkg/Documents/java-libs/jdbc-connectors/mysql-connector-j-8.0.32.jar">
+	<classpathentry kind="lib" path="C:/Users/darkg/eclipse-workspace/Agenda/libs/jdbc-connectors/mysql-connector-j-8.0.32.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
