@@ -1,19 +1,28 @@
 package entities;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Date;
+
 public class Usuario {
 
 	private String username;
 	private String senha;
 	private String nomeUsuario;
-	private String dataNascimento; //mudar o tipo para Date se precisar
+	private Date dataNascimento; //mudar o tipo para Date se precisar
 	private String genero;
 	private String email;
 	//Falta adicinar a foto pessoal
 	
-	public Usuario(String username, String senha, String nomeUsuario, String dataNascimento, String genero, String email) {
-		
+	public Usuario(String username, String senha, String nomeUsuario, Date dataNascimento, String genero, String email) {
 		this.username = username;
-		this.senha = senha;
+		try {
+			this.senha = criptografarSenha(senha);
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.nomeUsuario = nomeUsuario;
 		this.dataNascimento = dataNascimento;
 		this.genero = genero;
@@ -25,8 +34,28 @@ public class Usuario {
 	}
 	
 	public boolean validarSenha(String senha) {
+		boolean validado = false;
+		try {
+			validado = this.senha.equalsIgnoreCase(criptografarSenha(senha));
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		return this.senha.equalsIgnoreCase(senha);
+		return validado;
+	}
+	
+	public String criptografarSenha(String senha) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		MessageDigest algorithm = MessageDigest.getInstance("SHA-256");
+        byte messageDigest[] = algorithm.digest(senha.getBytes("UTF-8"));
+        
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : messageDigest) {
+          hexString.append(String.format("%02X", 0xFF & b));
+        }
+        String senhahex = hexString.toString();
+
+        return senhahex;
 	}
 
 	public String getUsername() {
@@ -37,12 +66,17 @@ public class Usuario {
 		this.username = username;
 	}
 
-	/*public String getSenha() {
+	public String getSenhaCriptografada() {
 		return senha;        //Não sei se precisa de getSenha então vou deixar comentado
-	}*/
+	}
 
 	public void setSenha(String senha) {
-		this.senha = senha;
+		try {
+			this.senha = criptografarSenha(senha);
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public String getNomeUsuario() {
@@ -53,11 +87,11 @@ public class Usuario {
 		this.nomeUsuario = nomeUsuario;
 	}
 
-	public String getDataNascimento() {
+	public Date getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(String dataNascimento) {
+	public void setDataNascimento(Date dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
