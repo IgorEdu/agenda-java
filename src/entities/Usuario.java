@@ -10,12 +10,12 @@ public class Usuario {
 	private String username;
 	private String senha;
 	private String nomeUsuario;
-	private Date dataNascimento; //mudar o tipo para Date se precisar
+	private Date dataNascimento;
 	private String genero;
 	private String email;
-	//Falta adicinar a foto pessoal
+	private String fotoPessoal;
 	
-	public Usuario(String username, String senha, String nomeUsuario, Date dataNascimento, String genero, String email) {
+	public Usuario(String username, String senha, String nomeUsuario, Date dataNascimento, String genero, String email, String fotoPessoal) {
 		this.username = username;
 		try {
 			this.senha = criptografarSenha(senha);
@@ -109,5 +109,13 @@ public class Usuario {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getFotoPessoal() {
+		return fotoPessoal;
+	}
+
+	public void setFotoPessoal(String fotoPessoal) {
+		this.fotoPessoal = fotoPessoal;
 	}
 }
