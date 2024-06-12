@@ -29,10 +29,50 @@ public class UsuarioDAOTest {
 		System.out.println("Cadastro efetuado com sucesso.");
 	}
 	
+	public static void atualizarUsuarioDAOTest() throws SQLException, IOException, ParseException {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Usuario usuario = new Usuario();
+		usuario.setId(1);
+		usuario.setUsername("Usuario-atualizado");
+		usuario.setSenha("senhaforte123");
+		usuario.setNomeUsuario("Novo Usuario");
+		usuario.setDataNascimento(new java.sql.Date(sdf.parse("19/02/1999").getTime()));
+		usuario.setGenero("MASCULINO");
+		usuario.setEmail("email@email.com");
+		
+
+		Connection conn = BancoDados.conectar();
+		new UsuarioDAO(conn).atualizar(usuario);
+
+		System.out.println("Cadastro atualizado com sucesso.");
+	}
+	
+	public static void excluirUsuarioDAOTest() throws SQLException, IOException, ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Usuario usuario = new Usuario();
+		usuario.setId(1);
+		usuario.setUsername("Usuario-atualizado");
+		usuario.setSenha("senhaforte123");
+		usuario.setNomeUsuario("Novo Usuario");
+		usuario.setDataNascimento(new java.sql.Date(sdf.parse("19/02/1999").getTime()));
+		usuario.setGenero("MASCULINO");
+		usuario.setEmail("email@email.com");
+		
+		Connection conn = BancoDados.conectar();
+		new UsuarioDAO(conn).excluir(usuario);
+
+		System.out.println("Cadastro excluido com sucesso.");
+	}
+	
 	public static void main(String[] args) {
 
 		try {
-			UsuarioDAOTest.cadastrarUsuarioDAOTest();
+//			UsuarioDAOTest.cadastrarUsuarioDAOTest();
+//			UsuarioDAOTest.atualizarUsuarioDAOTest();
+			UsuarioDAOTest.excluirUsuarioDAOTest();
 		} catch (SQLException | IOException | ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
