@@ -115,6 +115,42 @@ public class UsuarioDAO {
 		}  finally {
 
 			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
+	
+	public Usuario buscarUsuarioPorId(int id) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("select id, login, senha, nome, nascimento, genero, email from usuarios where id = ?");
+			st.setInt(1, id);
+			
+			rs = st.executeQuery();
+			
+			if (rs.next()) {
+
+				Usuario usuario = new Usuario();
+				
+				usuario.setId(rs.getInt(1));
+				usuario.setUsername(rs.getString(2));
+				usuario.setSenhaCriptografada(rs.getString(3));
+				usuario.setNomeUsuario(rs.getString(4));
+				usuario.setDataNascimento(rs.getDate(5));
+				usuario.setGenero(rs.getString(6));
+				usuario.setEmail(rs.getString(7));
+
+				return usuario;
+			}
+			
+			return null;
+			
+		}  finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
 			BancoDados.desconectar();
 		}
 	}
