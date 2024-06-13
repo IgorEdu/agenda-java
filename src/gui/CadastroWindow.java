@@ -11,7 +11,9 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -65,6 +67,9 @@ public class CadastroWindow extends JFrame {
 			this.txtConfirmarSenha.setText("");
 			return;
 		}
+		
+		if(!isValidDate()) return;
+		
 		System.out.println("Cadastradando...");
 		return;
 	}
@@ -84,7 +89,7 @@ public class CadastroWindow extends JFrame {
 		//if(String.valueOf(this.txtSenha.getPassword()).isBlank()) return true;
 		//if(String.valueOf(this.txtConfirmarSenha.getPassword()).isBlank()) return true;
 		//if(this.txtNomeUsuario.getText().isBlank()) return true;
-		if(this.txtDataNascimento.getText().replaceAll("/", "").isBlank()) return true;
+		if(this.txtDataNascimento.getText().replaceAll("/", "").isBlank())  return true; //checa campo de data vazio
 		//if(getGenero().isBlank()) return true;
 		//if(this.txtEmail.getText().isBlank()) return true;
 		//if(this.fotoPessoal.isBlank()) return true;
@@ -132,9 +137,10 @@ public class CadastroWindow extends JFrame {
 		}
 	}
 	
-	private void validarData() {
+	private boolean isValidDate() {
 		
-		//TO-DO
+		
+		return true;
 	}
 	
 	public CadastroWindow(LoginWindow login) {
@@ -227,6 +233,7 @@ public class CadastroWindow extends JFrame {
 		
 		txtDataNascimento = new JFormattedTextField(this.mascaraData);
 		txtDataNascimento.setBounds(166, 212, 116, 21);
+		txtDataNascimento.setFocusable(false);
 		contentPane.add(txtDataNascimento);
 		
 		JLabel lblGenero = new JLabel("Gênero:");
