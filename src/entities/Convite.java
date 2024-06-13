@@ -7,7 +7,8 @@ public class Convite {
 	private Compromisso compromisso;
 	
 	public Convite() {
-		
+		this.usuario = new Usuario();
+		this.compromisso = new Compromisso();
 	}
 	
 	public Convite(Usuario usuario, StatusConvite statusConvite, Compromisso compromisso) {
@@ -25,7 +26,7 @@ public class Convite {
 		return false;
 	}
 	
-	public boolean recustarConvite() {
+	public boolean recusarConvite() {
 		if(this.statusConvite != StatusConvite.PENDENTE) {
 			statusConvite = StatusConvite.REJEITADO;
 			return true;
