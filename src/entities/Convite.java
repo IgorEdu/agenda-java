@@ -2,6 +2,7 @@ package entities;
 
 public class Convite {
 
+	private int id;
 	private Usuario usuario;
 	private StatusConvite statusConvite;
 	private Compromisso compromisso;
@@ -11,8 +12,9 @@ public class Convite {
 		this.compromisso = new Compromisso();
 	}
 	
-	public Convite(Usuario usuario, StatusConvite statusConvite, Compromisso compromisso) {
+	public Convite(int id, Usuario usuario, StatusConvite statusConvite, Compromisso compromisso) {
 		super();
+		this.id = id;
 		this.usuario = usuario;
 		this.statusConvite = StatusConvite.PENDENTE;
 		this.compromisso = compromisso;
@@ -32,6 +34,14 @@ public class Convite {
 			return true;
 		}
 		return false;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public Usuario getUsuario() {
