@@ -4,21 +4,30 @@ import java.util.List;
 
 public class Agenda {
 
-	private String idAgenda;
+	private int idAgenda;
+	private Usuario usuario;
 	private String nomeAgenda;
 	private String descricao;
 	private List<Compromisso> compromissos;
 
-	Agenda(){
+	public Agenda(){
 		
 	}
 
-	public String getIdAgenda() {
+	public int getIdAgenda() {
 		return idAgenda;
 	}
 
-	public void setIdAgenda(String idAgenda) {
+	public void setIdAgenda(int idAgenda) {
 		this.idAgenda = idAgenda;
+	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public String getNomeAgenda() {
