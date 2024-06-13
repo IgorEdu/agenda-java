@@ -16,6 +16,62 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `agendas`
+--
+
+DROP TABLE IF EXISTS `agendas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `agendas` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `id_usuario` bigint unsigned NOT NULL,
+  `nome` varchar(50) NOT NULL,
+  `descricao` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `agendas_usuarios_FK` (`id_usuario`),
+  CONSTRAINT `agendas_usuarios_FK` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `agendas`
+--
+
+LOCK TABLES `agendas` WRITE;
+/*!40000 ALTER TABLE `agendas` DISABLE KEYS */;
+INSERT INTO `agendas` VALUES (2,4,'Agenda de teste','Descrição da agenda usada para teste do método'),(3,4,'Agenda de teste','Descrição da agenda usada para teste do método'),(4,4,'Agenda de teste','Descrição da agenda usada para teste do método'),(5,4,'Agenda de teste','Descrição da agenda usada para teste do método');
+/*!40000 ALTER TABLE `agendas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `agendas_usuarios`
+--
+
+DROP TABLE IF EXISTS `agendas_usuarios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `agendas_usuarios` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `id_usuario` bigint unsigned NOT NULL,
+  `id_agenda` bigint unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `agendas_usuarios_usuarios_FK` (`id_usuario`),
+  KEY `agendas_usuarios_agendas_FK` (`id_agenda`),
+  CONSTRAINT `agendas_usuarios_agendas_FK` FOREIGN KEY (`id_agenda`) REFERENCES `agendas` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `agendas_usuarios_usuarios_FK` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `agendas_usuarios`
+--
+
+LOCK TABLES `agendas_usuarios` WRITE;
+/*!40000 ALTER TABLE `agendas_usuarios` DISABLE KEYS */;
+/*!40000 ALTER TABLE `agendas_usuarios` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `compromissos`
 --
 
@@ -57,9 +113,12 @@ CREATE TABLE `convites` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `status` varchar(100) NOT NULL,
   `id_compromisso` bigint unsigned DEFAULT NULL,
+  `id_convidado` bigint unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `convites_compromissos_FK` (`id_compromisso`),
-  CONSTRAINT `convites_compromissos_FK` FOREIGN KEY (`id_compromisso`) REFERENCES `compromissos` (`id`) ON DELETE RESTRICT
+  KEY `convites_usuarios_FK` (`id_convidado`),
+  CONSTRAINT `convites_compromissos_FK` FOREIGN KEY (`id_compromisso`) REFERENCES `compromissos` (`id`) ON DELETE RESTRICT,
+  CONSTRAINT `convites_usuarios_FK` FOREIGN KEY (`id_convidado`) REFERENCES `usuarios` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -88,7 +147,7 @@ CREATE TABLE `usuarios` (
   `genero` varchar(20) NOT NULL,
   `email` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +156,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'Usuario','D3C411636EC2C9D6A3FF2CA04A4C90C9E93DA64712353BD44B8B84B23B2B0895','Novo Usuario','1999-02-19','MASCULINO','emailfulano@email.com');
+INSERT INTO `usuarios` VALUES (4,'teste 1','agsasrqwfqwwqwv','usuario teste','2024-06-13','MASCULINO','emailteste@email.com');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,4 +173,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-11 16:57:49
+-- Dump completed on 2024-06-13 20:27:03
