@@ -76,7 +76,7 @@ public class Usuario {
 	}
 
 	public String getSenhaCriptografada() {
-		return senha;        //Não sei se precisa de getSenha então vou deixar comentado
+		return senha;
 	}
 
 	public void setSenha(String senha) {
@@ -86,6 +86,10 @@ public class Usuario {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void setSenhaCriptografada(String senhaCriptografada) {
+		this.senha = senhaCriptografada;
 	}
 
 	public String getNomeUsuario() {
