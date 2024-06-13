@@ -95,14 +95,9 @@ public class AgendaDAO {
 				
 				Agenda agenda = new Agenda();
 				agenda.setIdAgenda(rs.getInt(1));
+				agenda.getUsuario().setId(rs.getInt(2));
 				agenda.setNomeAgenda(rs.getString(3));
 				agenda.setDescricao(rs.getString(4));
-
-				Connection conn2 = BancoDados.conectar();
-				UsuarioDAO usuarioDAO = new UsuarioDAO(conn2);
-				Usuario usuario = usuarioDAO.buscarUsuarioPorId(rs.getInt(2));
-				
-				agenda.setUsuario(usuario);
 
 				return agenda;
 			}
@@ -117,7 +112,7 @@ public class AgendaDAO {
 		}
 	}
 	
-	public List<Agenda> buscarAgendaPorIdUsuario(int idUsuario) throws SQLException {
+	public List<Agenda> buscarAgendaPorIdUsuario(int idUsuario) throws SQLException, IOException {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		
@@ -130,14 +125,11 @@ public class AgendaDAO {
 			List<Agenda> listaAgendas = new ArrayList<>();
 			
 			while (rs.next()) {
-				UsuarioDAO usuarioDAO = new UsuarioDAO(conn);
-				Usuario usuario = usuarioDAO.buscarUsuarioPorId(rs.getInt(2));
-				
 				Agenda agenda = new Agenda();
 				agenda.setIdAgenda(rs.getInt(1));
-				agenda.setUsuario(usuario);
+				agenda.getUsuario().setId(rs.getInt(2));
 				agenda.setNomeAgenda(rs.getString(3));
-				agenda.setDescricao(rs.getString(4));
+				agenda.setDescricao(rs.getString(4));			
 
 				listaAgendas.add(agenda);
 			}
