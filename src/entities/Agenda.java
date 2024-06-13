@@ -11,7 +11,7 @@ public class Agenda {
 	private List<Compromisso> compromissos;
 
 	public Agenda(){
-		
+		this.usuario = new Usuario();
 	}
 
 	public int getIdAgenda() {
