@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Compromisso {
 
-	private String idCompromiss;
+	private int idCompromisso;
 	private String titulo;
 	private String descricao;
 	private Date dataInicio;
@@ -21,12 +21,12 @@ public class Compromisso {
 		
 	}
 
-	public String getIdCompromiss() {
-		return idCompromiss;
+	public int getIdCompromisso() {
+		return idCompromisso;
 	}
 
-	public void setIdCompromiss(String idCompromiss) {
-		this.idCompromiss = idCompromiss;
+	public void setIdCompromisso(int idCompromisso) {
+		this.idCompromisso = idCompromisso;
 	}
 
 	public String getTitulo() {
