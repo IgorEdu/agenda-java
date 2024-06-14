@@ -4,6 +4,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
+
+import entities.Usuario;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ButtonGroup;
@@ -13,7 +16,11 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -70,6 +77,8 @@ public class CadastroWindow extends JFrame {
 		
 		if(!isValidDate()) return;
 		
+		//String username, String senha, String nomeUsuario, Date dataNascimento, String genero, String email, String fotoPessoal
+		Usuario user = new Usuario();
 		System.out.println("Cadastradando...");
 		return;
 	}
@@ -85,14 +94,14 @@ public class CadastroWindow extends JFrame {
 	private boolean temCamposVazios() {
 		
 		
-		//if(this.txtUsername.getText().isBlank()) return true;
-		//if(String.valueOf(this.txtSenha.getPassword()).isBlank()) return true;
-		//if(String.valueOf(this.txtConfirmarSenha.getPassword()).isBlank()) return true;
-		//if(this.txtNomeUsuario.getText().isBlank()) return true;
-		if(this.txtDataNascimento.getText().replaceAll("/", "").isBlank())  return true; //checa campo de data vazio
-		//if(getGenero().isBlank()) return true;
-		//if(this.txtEmail.getText().isBlank()) return true;
-		//if(this.fotoPessoal.isBlank()) return true;
+		/*if(this.txtUsername.getText().isBlank()) return true;
+		if(String.valueOf(this.txtSenha.getPassword()).isBlank()) return true;
+		if(String.valueOf(this.txtConfirmarSenha.getPassword()).isBlank()) return true;
+		if(this.txtNomeUsuario.getText().isBlank()) return true;
+		if(this.txtDataNascimento.getText().replaceAll(" ", "").length() < 10)  return true; //checa campo de data vazio
+		if(getGenero().isBlank()) return true;
+		if(this.txtEmail.getText().isBlank()) return true;
+		if(this.fotoPessoal.isBlank()) return true;*/
 		
 		return false;
 	}
@@ -139,8 +148,19 @@ public class CadastroWindow extends JFrame {
 	
 	private boolean isValidDate() {
 		
-		
-		return true;
+		DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd/MM/uuuu")
+				.withResolverStyle(ResolverStyle.STRICT);
+		try {
+			LocalDate data = LocalDate.parse(this.txtDataNascimento.getText(), formater);
+			if(Integer.parseInt(this.txtDataNascimento.getText().substring(6, 10)) > 2024) throw new Exception();
+			if(data.isAfter(LocalDate.now())) throw new Exception();
+			return true;
+		} catch(Exception e) {
+			
+			JOptionPane.showMessageDialog(this, "Data Inválida! Digite Novamente", "ERROR", JOptionPane.ERROR_MESSAGE);
+			this.txtDataNascimento.setValue(null);
+			return false;
+		}
 	}
 	
 	public CadastroWindow(LoginWindow login) {
@@ -233,7 +253,6 @@ public class CadastroWindow extends JFrame {
 		
 		txtDataNascimento = new JFormattedTextField(this.mascaraData);
 		txtDataNascimento.setBounds(166, 212, 116, 21);
-		txtDataNascimento.setFocusable(false);
 		contentPane.add(txtDataNascimento);
 		
 		JLabel lblGenero = new JLabel("Gênero:");
