@@ -41,6 +41,9 @@ public class LoginWindow extends JFrame {
 			
 			if(usuario.validarSenha(String.valueOf(this.txtSenha.getPassword()))) {
 				
+				new UsuarioWindow(usuario).setVisible(true);
+				this.setVisible(false);
+				dispose();
 			} else {
 				JOptionPane.showMessageDialog(this, "Senha Inválida!", "AVISO!", JOptionPane.WARNING_MESSAGE);
 			}

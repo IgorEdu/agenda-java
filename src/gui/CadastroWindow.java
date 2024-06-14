@@ -15,13 +15,10 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.awt.Color;
 import java.awt.Font;
@@ -93,12 +90,13 @@ public class CadastroWindow extends JFrame {
 			user.setEmail(this.txtEmail.getText());
 			user.setFotoPessoal(this.fotoPessoal);
 			usuarioService.cadastrar(user);
-			JOptionPane.showMessageDialog(this, "Usuario cadastrado com sucesso!\nRetorne a pagina de Login para acessar a aplicação", "Cadastro Efetuado!", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Usuario cadastrado com sucesso!", "SUCESSO!", JOptionPane.INFORMATION_MESSAGE);
 			usuarioService.listarUsuarios();
+			limparCampos();
 			return;
 		} catch(ParseException e) {
 			
-			System.out.println(e.getMessage());
+			JOptionPane.showMessageDialog(this, "Um erro inesperado ocorreu. \nTente Novamente", "ERRO", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -186,6 +184,22 @@ public class CadastroWindow extends JFrame {
 			this.txtDataNascimento.setValue(null);
 			return false;
 		}
+	}
+	
+	private void limparCampos() {
+		
+		this.txtUsername.setText("");
+		this.txtSenha.setText("");
+		this.txtConfirmarSenha.setText("");
+		this.txtNomeUsuario.setText("");
+		this.txtDataNascimento.setValue(null);
+		this.rbMasculino.setSelected(false);
+		this.rbFeminino.setSelected(false);
+		this.rbNaoInformar.setSelected(false);
+		this.txtEmail.setText("");
+		this.fotoPessoal = "";
+		this.lblArquivoSelecionado.setText("Nenhum arquivo selecionado.");
+		this.lblArquivoSelecionado.setToolTipText("");
 	}
 	
 	public CadastroWindow(LoginWindow login) {
@@ -350,6 +364,18 @@ public class CadastroWindow extends JFrame {
 		btnGroupSexo.add(rbMasculino);
 		btnGroupSexo.add(rbFeminino);
 		btnGroupSexo.add(rbNaoInformar);
+		
+		JButton btnLimparCampos = new JButton("Limpar Campos");
+		btnLimparCampos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(JOptionPane.showConfirmDialog(btnLimparCampos, "Tem certeza que deseja limpar os campos?") == JOptionPane.YES_OPTION) {
+					limparCampos();
+				}
+			}
+		});
+		btnLimparCampos.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnLimparCampos.setBounds(52, 366, 125, 21);
+		contentPane.add(btnLimparCampos);
 		
 		this.fotoPessoal = "";
 	}

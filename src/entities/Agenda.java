@@ -13,6 +13,24 @@ public class Agenda {
 	public Agenda(){
 		this.usuario = new Usuario();
 	}
+	
+	public Agenda(int idAgenda, Usuario usuario, String nomeAgenda, String descricao) {
+		
+		this.idAgenda = idAgenda;
+		this.usuario = usuario;
+		this.nomeAgenda = nomeAgenda;
+		this.descricao = descricao;
+		this.compromissos = null;
+	}
+	
+	public Agenda(int idAgenda, Usuario usuario, String nomeAgenda, String descricao, List<Compromisso> compromissos) {
+		
+		this.idAgenda = idAgenda;
+		this.usuario = usuario;
+		this.nomeAgenda = nomeAgenda;
+		this.descricao = descricao;
+		this.compromissos = compromissos;
+	}
 
 	public int getIdAgenda() {
 		return idAgenda;
