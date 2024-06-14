@@ -47,7 +47,7 @@ public class CompromissoDAO {
 		
 		try {
 			st = conn.prepareStatement(
-					"update compromissos titulo = ?, descricao = ?, data_inicio = ?, horario_inicio = ?, "
+					"update compromissos set titulo = ?, descricao = ?, data_inicio = ?, horario_inicio = ?, "
 					+ "data_termino = ?, horario_termino = ?, local = ?, data_notificacao = ?, horario_notificacao = ?"
 					+ " where id = ?"
 					);
@@ -97,10 +97,10 @@ public class CompromissoDAO {
 		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement("id, titulo, descricao, data_inicio, horario_inicio, "
+			st = conn.prepareStatement("select id, titulo, descricao, data_inicio, horario_inicio, "
 					+ "data_termino, horario_termino, local, "
 					+ "data_notificacao, horario_notificacao "
-					+ "from convites "
+					+ "from compromissos "
 					+ "where id = ?");
 			st.setInt(1, idCompromisso);
 			
