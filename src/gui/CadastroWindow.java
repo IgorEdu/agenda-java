@@ -6,6 +6,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
 import entities.Usuario;
+import service.UsuarioService;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -16,6 +17,7 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -48,6 +50,7 @@ public class CadastroWindow extends JFrame {
 	private JRadioButton rbNaoInformar;
 	private String fotoPessoal;
 	private MaskFormatter mascaraData;
+	private UsuarioService usuarioService;
 
 	/**
 	 * Create the frame.
@@ -62,7 +65,7 @@ public class CadastroWindow extends JFrame {
 	
 	private void cadastrarUsuario() {
 		
-		if(temCamposVazios()) {
+		/*if(temCamposVazios()) {
 			
 			JOptionPane.showMessageDialog(this,"Preencha todos os campos!", "AVISO!", JOptionPane.WARNING_MESSAGE);
 			return;
@@ -75,12 +78,35 @@ public class CadastroWindow extends JFrame {
 			return;
 		}
 		
-		if(!isValidDate()) return;
+		if(!isValidDate()) return;*/
 		
-		//String username, String senha, String nomeUsuario, Date dataNascimento, String genero, String email, String fotoPessoal
-		Usuario user = new Usuario();
-		System.out.println("Cadastradando...");
-		return;
+		try {
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			
+			Usuario user = new Usuario();
+			user.setUsername(this.txtUsername.getText());
+			user.setSenha(String.valueOf(this.txtSenha.getPassword()));
+			user.setNomeUsuario(this.txtNomeUsuario.getText());
+			user.setDataNascimento(new java.sql.Date(sdf.parse(this.txtDataNascimento.getText()).getTime()));
+			user.setGenero(generoSelecionado());
+			user.setEmail(this.txtEmail.getText());
+			user.setFotoPessoal(this.fotoPessoal);
+			usuarioService.cadastrar(user);
+			JOptionPane.showMessageDialog(this, "Usuario cadastrado com sucesso!\nRetorne a pagina de Login para acessar a aplicação", "Cadastro Efetuado!", JOptionPane.INFORMATION_MESSAGE);
+			usuarioService.listarUsuarios();
+			return;
+		} catch(ParseException e) {
+			
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	private String generoSelecionado() {
+		
+		if(this.rbMasculino.isSelected()) return "Masculino";
+		if(this.rbFeminino.isSelected()) return "Feminino";
+		return "Não Informar";
 	}
 	
 	private boolean senhasConferem() {
@@ -125,7 +151,6 @@ public class CadastroWindow extends JFrame {
 			this.fotoPessoal = chooser.getSelectedFile().getAbsolutePath();
 			this.lblArquivoSelecionado.setText(chooser.getSelectedFile().getName());
 			this.lblArquivoSelecionado.setToolTipText(chooser.getSelectedFile().getName());
-			System.out.println(fotoPessoal);
 			return;
 		} else if(res == JFileChooser.ERROR_OPTION) {			
 			JOptionPane.showMessageDialog(this, "Não foi possivel encontrar o arquivo. Tente Novamente", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -168,6 +193,8 @@ public class CadastroWindow extends JFrame {
 		this.login = login;
 		this.criarMascara();
 		this.initComponents();
+		
+		this.usuarioService = new UsuarioService();
 	}
 	
 	public void initComponents() {

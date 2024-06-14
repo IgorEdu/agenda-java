@@ -3,7 +3,13 @@ package gui;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import entities.Usuario;
+import service.UsuarioService;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -20,13 +26,26 @@ public class LoginWindow extends JFrame {
 	private JPanel contentPane;
 	private JTextField txtUsername;
 	private JPasswordField txtSenha;
+	private UsuarioService usuarioService;
 
 	/**
 	 * Create the frame.
 	 */
 	private void validarLogin() {
 		
-		System.out.println("Validando...");
+		Usuario usuario = usuarioService.buscarUsuarioPorLogin(this.txtUsername.getText());
+		
+		if(usuario == null) {
+			JOptionPane.showMessageDialog(this, "Usuario não encontrado", "AVISO!", JOptionPane.WARNING_MESSAGE);
+		} else {
+			
+			if(usuario.validarSenha(String.valueOf(this.txtSenha.getPassword()))) {
+				
+			} else {
+				JOptionPane.showMessageDialog(this, "Senha Inválida!", "AVISO!", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		this.txtSenha.setText("");
 	}
 	
 	private void abrirJanelaCadastro() {
@@ -36,6 +55,13 @@ public class LoginWindow extends JFrame {
 	}
 	
 	public LoginWindow() {
+		
+		initComponents();
+		
+		this.usuarioService = new UsuarioService();
+	}
+	
+	public void initComponents() {
 		setResizable(false);
 		setTitle("Login");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
