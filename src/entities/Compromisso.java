@@ -17,7 +17,7 @@ public class Compromisso {
 	private Date dataNotificacao;
 	private String horarioNotificacao;
 	
-	Compromisso(){
+	public Compromisso(){
 		
 	}
 
