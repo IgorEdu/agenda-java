@@ -39,4 +39,8 @@ public class AgendaService {
 	public void cadastrarAgenda(Agenda agenda) {
 		this.agendas.add(agenda);
 	}
+	
+	public void excluirAgenda(Agenda agenda) {
+		this.agendas.remove(agenda);
+	}
 }
