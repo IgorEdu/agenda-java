@@ -21,7 +21,21 @@ public class AgendaService {
 		agendas.add(new Agenda(3, new Usuario("joaozinho", "bambam", "Joaozinho Santos", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "joaozinho@outlook.com", "joao.png"), "Agenda4", "agenda 4", null));
 	}
 	
-	public List<Agenda> pesquisarAgendasUsuario(Usuario usuario){
+	public void cadastrarAgenda(Agenda agenda) {
+		
+		this.agendas.add(agenda);
+	}
+	
+	public Agenda buscarAgendaPorId(int idAgenda) {
+		
+		for(Agenda agenda : agendas) {
+			
+			if(agenda.getIdAgenda() == idAgenda) return agenda;
+		}
+		return null;
+	}
+	
+	public List<Agenda> buscarAgendasUsuario(Usuario usuario){
 		
 		List<Agenda> resultado = new ArrayList<Agenda>();
 		
@@ -33,5 +47,33 @@ public class AgendaService {
 		}
 		
 		return resultado;
+	}
+	
+	public int atualizarAgenda(Agenda agendaNova) {
+		
+		for(Agenda agenda : agendas) {
+			
+			if(agenda.getIdAgenda() == agendaNova.getIdAgenda()) {
+				
+				agendas.add(agendaNova);
+				agendas.remove(agenda);
+				return 1;
+			}
+		}
+		
+		return 0;
+	}
+	
+	public int excluirAgenda(int idAgenda) {
+		
+		for(Agenda agenda : agendas) {
+			
+			if(agenda.getIdAgenda() == idAgenda) {
+				
+				agendas.remove(agenda);
+				return 1;
+			}
+		}
+		return 0;
 	}
 }
