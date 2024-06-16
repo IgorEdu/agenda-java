@@ -265,7 +265,7 @@ public class UsuarioWindow extends JFrame {
 		btnExcluir.setBounds(795, 187, 123, 40);
 		panelAgendas.add(btnExcluir);
 		
-		JLabel lblAviso = new JLabel("<html>\r\n<p>\r\nINSTRUÇÕES: <br>\r\nPara ver seus COMPROMISSOS, clique duas vezes na agenda desejada.<br>\r\nPara EXCLUSÃO, selecione apenas UMA agenda da tabela.<br>\r\nPara ATUALIZAÇÃO, seleciona UMA linha da tabela e preencha abaixo APENAS OS CAMPOS QUE DEVEM SER ATUALIZADOS.\r\n</p>\r\n</html>");
+		JLabel lblAviso = new JLabel("<html>\r\n<p>\r\nINSTRUÇÕES: <br>\r\nPara VER SEUS COMPROMISSOS, clique duas vezes na agenda desejada.<br>\r\nPara EXCLUSÃO, selecione apenas UMA agenda da tabela.<br>\r\nPara ATUALIZAÇÃO, seleciona UMA linha da tabela e preencha abaixo APENAS OS CAMPOS QUE DEVEM SER ATUALIZADOS.\r\n</p>\r\n</html>");
 		lblAviso.setVerticalAlignment(SwingConstants.TOP);
 		lblAviso.setBounds(10, 173, 600, 66);
 		panelAgendas.add(lblAviso);
