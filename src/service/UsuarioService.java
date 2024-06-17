@@ -17,9 +17,14 @@ public class UsuarioService {
 		usuarios.add(new Usuario("joaozinho", "bambam", "Joaozinho Santos", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "joaozinho@outlook.com", "joao.png"));
 	}
 	
-	public void cadastrar(Usuario usuario) {
-		
-		this.usuarios.add(usuario);
+	public boolean cadastrar(Usuario usuario) {
+		String login = usuario.getUsername();
+		if(buscarUsuarioPorLogin(login) != null) {
+			this.usuarios.add(usuario);
+			return true;
+		}
+		System.err.println("Usuario " + login + " já cadastrado!");
+		return false;
 	}
 	
 	public void atualizarUsuario(Usuario usuarioNovo) {
