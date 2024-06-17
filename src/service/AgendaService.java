@@ -22,7 +22,21 @@ public class AgendaService {
 	
 	}
 	
-	public List<Agenda> pesquisarAgendasUsuario(Usuario usuario){
+	public void cadastrarAgenda(Agenda agenda) {
+		
+		this.agendas.add(agenda);
+	}
+	
+	public Agenda buscarAgendaPorId(int idAgenda) {
+		
+		for(Agenda agenda : agendas) {
+			
+			if(agenda.getIdAgenda() == idAgenda) return agenda;
+		}
+		return null;
+	}
+	
+	public List<Agenda> buscarAgendasUsuario(Usuario usuario){
 		
 		List<Agenda> resultado = new ArrayList<Agenda>();
 		
@@ -35,12 +49,32 @@ public class AgendaService {
 		
 		return resultado;
 	}
-	
-	public void cadastrarAgenda(Agenda agenda) {
-		this.agendas.add(agenda);
+   
+	public int atualizarAgenda(Agenda agendaNova) {
+		
+		for(Agenda agenda : agendas) {
+			
+			if(agenda.getIdAgenda() == agendaNova.getIdAgenda()) {
+				
+				agendas.add(agendaNova);
+				agendas.remove(agenda);
+				return 1;
+			}
+		}
+		
+		return 0;
 	}
 	
-	public void excluirAgenda(Agenda agenda) {
-		this.agendas.remove(agenda);
+	public int excluirAgenda(int idAgenda) {
+		
+		for(Agenda agenda : agendas) {
+			
+			if(agenda.getIdAgenda() == idAgenda) {
+				
+				agendas.remove(agenda);
+				return 1;
+			}
+		}
+		return 0;
 	}
 }
