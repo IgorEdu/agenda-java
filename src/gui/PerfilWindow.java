@@ -229,6 +229,7 @@ public class PerfilWindow extends JFrame {
 		this.btnSelecinarFoto.setVisible(false);
 		
 		this.lblArquivoSelecionado.setText("Nenhum arquivo Selecionado.");
+		this.lblArquivoSelecionado.setToolTipText("Nenhum arquivo Selecionado.");
 		this.lblArquivoSelecionado.setVisible(false);
 		
 		this.btnEditarPerfil.setEnabled(true);
@@ -320,7 +321,7 @@ public class PerfilWindow extends JFrame {
 			return;
 		}
 		
-		int res = JOptionPane.showConfirmDialog(this, "Deseja mesmo alterar suas informações?");
+		int res = JOptionPane.showConfirmDialog(this, "Deseja mesmo alterar suas informações?\n\nATENÇÃO, CAMPOS NÃO PREENCHIDOS NÃO SERÃO ATUALIZADOS");
 		
 		if(res == JOptionPane.YES_OPTION) {
 			
@@ -329,16 +330,29 @@ public class PerfilWindow extends JFrame {
 				
 				Usuario user = new Usuario();
 				user.setId(usuario.getId());
-				user.setUsername(this.txtUsername.getText());
+				
+				//Se o campo estiver vazio, ele reseta o valor para o que ja estava
+				
+				user.setUsername(this.txtUsername.getText().isBlank() ? usuario.getUsername() : this.txtUsername.getText());
+				
 				if(String.valueOf(this.txtSenhaAtual.getPassword()).isBlank()) {
 					user.setSenhaCriptografada(usuario.getSenhaCriptografada());
 				} else {
 					user.setSenha(String.valueOf(this.txtSenhaNova.getPassword()));
 				}
-				user.setNomeUsuario(this.txtNomeCompleto.getText());
-				user.setDataNascimento(new java.sql.Date(sdf.parse(this.txtDataNascimento.getText()).getTime()));
+				
+				user.setNomeUsuario(this.txtNomeCompleto.getText()
+														.isBlank() ? usuario.getNomeUsuario(): this.txtNomeCompleto.getText());
+				
+				user.setDataNascimento(this.txtDataNascimento.getText().replaceAll("/", "")
+																	   .isBlank() ? usuario.getDataNascimento() 
+																				   : new java.sql.Date(sdf.parse(this.txtDataNascimento.getText()).getTime()));
+
 				user.setGenero(getGeneroSelecionado());
-				user.setEmail(this.txtEmail.getText());
+				
+				user.setEmail(this.txtEmail.getText().isBlank()
+									? usuario.getEmail() : this.txtEmail.getText());
+				
 				user.setFotoPessoal(this.fotoPessoal);
 				
 				usuarioService.atualizarUsuario(user);
