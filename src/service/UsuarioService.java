@@ -1,6 +1,5 @@
 package service;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +20,24 @@ public class UsuarioService {
 	public void cadastrar(Usuario usuario) {
 		
 		this.usuarios.add(usuario);
+	}
+	
+	public void atualizarUsuario(Usuario usuarioNovo) {
+		
+		for(Usuario usuario : usuarios) {
+			
+			if(usuario.getId() == usuarioNovo.getId()) {
+				
+				usuarios.add(usuarioNovo);
+				usuarios.remove(usuario);
+				return;
+			}
+		}
+	}
+	
+	public void excluirUsuario(Usuario usuario) {
+		
+		this.usuarios.remove(usuario);
 	}
 	
 	public Usuario buscarUsuarioPorLogin(String login) {

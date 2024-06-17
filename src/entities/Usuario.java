@@ -28,6 +28,7 @@ public class Usuario {
 		this.dataNascimento = dataNascimento;
 		this.genero = genero;
 		this.email = email;
+		this.fotoPessoal = fotoPessoal;
 	}
 	
 	public Usuario() {
