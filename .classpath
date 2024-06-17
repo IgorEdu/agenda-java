@@ -7,6 +7,7 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="images"/>
 	<classpathentry exported="true" kind="lib" path="libs/jdbc-connectors/mysql-connector-j-8.0.32.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
