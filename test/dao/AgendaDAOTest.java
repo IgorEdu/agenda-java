@@ -44,7 +44,7 @@ public class AgendaDAOTest {
 
 		
 		Connection conn = BancoDados.conectar();
-		new AgendaDAO(conn).excluir(agenda);
+		new AgendaDAO(conn).excluir(agenda.getIdAgenda());
 
 		System.out.println("Agenda " + agenda.getNomeAgenda() + " excluida com sucesso.");
 	}
