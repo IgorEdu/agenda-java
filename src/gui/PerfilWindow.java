@@ -312,6 +312,12 @@ public class PerfilWindow extends JFrame {
 			return;
 		}
 		
+		//checa se o nome de usuario é diferente do utilizado atualmente e checa se o novo nome esta disponivel
+		if((!this.txtUsername.getText().equalsIgnoreCase(usuario.getUsername()) && (usuarioService.buscarUsuarioPorLogin(this.txtUsername.getText()) != null))) {
+			JOptionPane.showMessageDialog(this, "Nome de Usuario escolhido ja esta sendo usado!", "AVISO!", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
 		if(!isValidDate()) {

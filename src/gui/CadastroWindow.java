@@ -75,6 +75,11 @@ public class CadastroWindow extends JFrame {
 			return;
 		}
 		
+		if(usuarioService.buscarUsuarioPorLogin(this.txtUsername.getText()) != null) {
+			JOptionPane.showMessageDialog(this, "Nome de Usuario escolhido ja esta sendo usado!", "AVISO!", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		
 		if(!isValidDate()) return;*/
 		
 		try {
@@ -89,7 +94,6 @@ public class CadastroWindow extends JFrame {
 			user.setGenero(generoSelecionado());
 			user.setEmail(this.txtEmail.getText());
 			user.setFotoPessoal(this.fotoPessoal);
-			usuarioService.cadastrar(user);
 			JOptionPane.showMessageDialog(this, "Usuario cadastrado com sucesso!", "SUCESSO!", JOptionPane.INFORMATION_MESSAGE);
 			usuarioService.listarUsuarios();
 			limparCampos();

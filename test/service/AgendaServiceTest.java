@@ -13,7 +13,7 @@ public class AgendaServiceTest {
 		Agenda agenda = new Agenda(5, usuario, "Agenda4", "agenda 4");
 		
 		agendaService.cadastrarAgenda(agenda);
-		List<Agenda> agendasUsuario = agendaService.pesquisarAgendasUsuario(usuario);
+		List<Agenda> agendasUsuario = agendaService.buscarAgendasUsuario(usuario);
 		
 		for(Agenda agendaUsuario : agendasUsuario) {
 			System.out.println("=================================");
@@ -26,8 +26,8 @@ public class AgendaServiceTest {
 			System.out.println();
 		}
 		
-		agendaService.excluirAgenda(agenda);
-		agendasUsuario = agendaService.pesquisarAgendasUsuario(usuario);
+		agendaService.excluirAgenda(agenda.getIdAgenda());
+		agendasUsuario = agendaService.buscarAgendasUsuario(usuario);
 		
 		for(Agenda agendaUsuario : agendasUsuario) {
 			System.out.println("=================================");
