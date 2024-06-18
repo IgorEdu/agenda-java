@@ -46,4 +46,18 @@ public class CompromissoService {
 		
 		return 0;
 	}
+	
+	public int excluirCompromisso(int idCompromisso) {
+		
+		for(Compromisso c : compromissos) {
+			
+			if(c.getIdCompromisso() == idCompromisso) {
+				
+				compromissos.remove(c);
+				return 1;
+			}
+		}
+		
+		return 0;
+	}
 }
