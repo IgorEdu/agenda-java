@@ -13,7 +13,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="libs/jcalendar/jcalendar-1.4.jar">
+	<classpathentry kind="lib" path="./libs/jcalendar/jcalendar-1.4.jar" sourcepath="libs/JCalendar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
