@@ -94,9 +94,10 @@ public class CadastroWindow extends JFrame {
 			user.setGenero(generoSelecionado());
 			user.setEmail(this.txtEmail.getText());
 			user.setFotoPessoal(this.fotoPessoal);
-			JOptionPane.showMessageDialog(this, "Usuario cadastrado com sucesso!", "SUCESSO!", JOptionPane.INFORMATION_MESSAGE);
-			usuarioService.listarUsuarios();
-			limparCampos();
+			if(usuarioService.cadastrar(user)) {
+				JOptionPane.showMessageDialog(this, "Usuario cadastrado com sucesso!", "SUCESSO!", JOptionPane.INFORMATION_MESSAGE);				
+				limparCampos();
+			}
 			return;
 		} catch(ParseException e) {
 			
