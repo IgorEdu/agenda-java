@@ -20,6 +20,22 @@ public class Compromisso {
 	public Compromisso(){
 		
 	}
+	
+	public Compromisso(int idCompromisso, String titulo, String descricao, Date dataInicio, String horarioInicio,
+			Date dataTermino, String horarioTermino, String local, Date dataNotificacao, String horarioNotificacao) {
+		
+		this.idCompromisso = idCompromisso;
+		this.titulo = titulo;
+		this.descricao = descricao;
+		this.dataInicio = dataInicio;
+		this.horarioInicio = horarioInicio;
+		this.dataTermino = dataTermino;
+		this.horarioTermino = horarioTermino;
+		this.local = local;
+		this.dataNotificacao = dataNotificacao;
+		this.horarioNotificacao = horarioNotificacao;
+		this.convites = null;
+	}
 
 	public int getIdCompromisso() {
 		return idCompromisso;
