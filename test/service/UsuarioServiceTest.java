@@ -35,7 +35,7 @@ public class UsuarioServiceTest {
 		System.out.println();
 		
 		List<Usuario> outrosUsuarios = new ArrayList<Usuario>();
-		outrosUsuarios = userService.listarOutrosUsuario(usuario);
+		//outrosUsuarios = userService.listarOutrosUsuario(usuario);
 		
 		for(Usuario outroUsuario : outrosUsuarios) {
 			System.out.println();
