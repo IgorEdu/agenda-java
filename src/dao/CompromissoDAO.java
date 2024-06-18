@@ -132,4 +132,54 @@ public class CompromissoDAO {
 			BancoDados.desconectar();
 		}
 	}
+	
+	public Compromisso buscarCompromissoSemId(Compromisso compromisso) throws SQLException, IOException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("select id, titulo, descricao, data_inicio, horario_inicio, "
+					+ "data_termino, horario_termino, local, "
+					+ "data_notificacao, horario_notificacao "
+					+ "from compromissos "
+					+ "where titulo like ? and descricao like ? and data_inicio = ? and horario_inicio = ?"
+					+ " and data_termino = ? and horario_termino = ? and local like ?");
+			st.setString(1, compromisso.getTitulo());
+			st.setString(2, compromisso.getDescricao());
+			st.setDate(3, compromisso.getDataInicio());
+			st.setString(4, compromisso.getHorarioInicio());
+			st.setDate(5, compromisso.getDataTermino());
+			st.setString(6, compromisso.getHorarioTermino());
+			st.setString(7, compromisso.getLocal());
+//			st.setDate(8, compromisso.getDataNotificacao());
+//			st.setString(9, compromisso.getHorarioNotificacao());
+			
+			rs = st.executeQuery();
+			
+			if (rs.next()) {
+				compromisso.setIdCompromisso(rs.getInt(1));
+				compromisso.setTitulo(rs.getString(2));
+				compromisso.setDescricao(rs.getString(3));
+				compromisso.setDataInicio(rs.getDate(4));
+				compromisso.setHorarioInicio(rs.getString(5));
+				compromisso.setDataTermino(rs.getDate(6));
+				compromisso.setHorarioTermino(rs.getString(7));
+				compromisso.setLocal(rs.getString(8));
+				compromisso.setDataNotificacao(rs.getDate(9));
+				compromisso.setHorarioNotificacao(rs.getString(10));
+
+				System.out.println("Compromisso encontrado: " + compromisso.getIdCompromisso());
+				
+				return compromisso;
+			}
+			
+			return null;
+			
+		}  finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
 }
