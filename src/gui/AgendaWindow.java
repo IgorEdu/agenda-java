@@ -11,7 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -33,7 +32,6 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
-import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JSeparator;
@@ -77,11 +75,33 @@ public class AgendaWindow extends JFrame {
 		});
 	}
 	
+	private void limparCampos() {
+		
+		this.txtTitulo.setText("");
+		this.txtDescricao.setText("");
+		this.txtLocal.setText("");
+		
+		this.dateChooserInicio.setDate(null);
+		this.txtHoraInicio.setValue(null);
+		
+		this.dateChooserFim.setDate(null);
+		this.txtHoraFim.setValue(null);
+		
+		this.dateChooserNotificacao.setDate(null);
+		this.txtHoraNotificacao.setValue(null);
+	}
+	
 	private void buscarCompromissos() {
+		
 		
 		DefaultTableModel modelo = (DefaultTableModel) this.tableCompromissos.getModel();
 		modelo.fireTableDataChanged();
 		modelo.setRowCount(0);
+		
+		if(this.agenda.getCompromissos() == null) {
+			JOptionPane.showMessageDialog(this, "Nenhum Compromisso encontrado!");
+			return;
+		}
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
@@ -215,12 +235,33 @@ public class AgendaWindow extends JFrame {
 		return false;
 	}
 	
+	private boolean horaValida(String horario, String source) {
+		
+		String[] split = horario.split(":");
+		int hora = Integer.parseInt(split[0]);
+		int minuto = Integer.parseInt(split[1]);
+		
+		if(hora >= 24 || hora < 0) {
+			
+			JOptionPane.showMessageDialog(this, "Horario de " + source + " possui Hora invalida!", "AVISO!", JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		if(minuto >= 60 || minuto < 0) {
+			JOptionPane.showMessageDialog(this, "Horario de " + source + " possui Minuto invalida!", "AVISO!", JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		return true;
+	}
+	
 	private void cadastrarCompromisso() {
 				
-		/*if(possuiCampoVazio()) {
+		if(possuiCampoVazio()) {
 			JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "AVISO!", JOptionPane.WARNING_MESSAGE);
 			return;
-		}*/
+		}
+		if(!horaValida(this.txtHoraInicio.getText(),"Inicio")) return;
+		if(!horaValida(this.txtHoraFim.getText(),"Termino")) return;
+		if(!horaValida(this.txtHoraNotificacao.getText(),"Notificação")) return;
 		if(possuiDataInvalida()) return;
 		
 		
@@ -242,6 +283,7 @@ public class AgendaWindow extends JFrame {
 		c.setHorarioNotificacao(this.txtHoraNotificacao.getText());
 		
 		this.agenda.getCompromissos().add(c);
+		limparCampos();
 		buscarCompromissos();
 	}
 	
@@ -253,8 +295,10 @@ public class AgendaWindow extends JFrame {
 		
 		if(res == JOptionPane.YES_OPTION) {
 			
-			this.agenda.getCompromissos();
+			compromissoService.excluirCompromisso((int)tableCompromissos.getValueAt(tableCompromissos.getSelectedRow(), 0));
+			this.agenda.setCompromissos(compromissoService.buscarCompromissosAgenda(agenda.getIdAgenda()));
 			JOptionPane.showMessageDialog(this, "Compromisso excluido com sucesso!");
+			buscarCompromissos();
 		}
 	}
 	
@@ -276,6 +320,10 @@ public class AgendaWindow extends JFrame {
 		novo.setTitulo(this.txtTitulo.getText().isBlank() ? antigo.getTitulo() : this.txtTitulo.getText());
 		novo.setDescricao(this.txtDescricao.getText().isBlank() ? antigo.getDescricao() : this.txtDescricao.getText());
 		novo.setLocal(this.txtLocal.getText().isBlank() ? antigo.getLocal() : this.txtLocal.getText());
+		
+		if(!this.txtHoraInicio.getText().isBlank() && !horaValida(this.txtHoraInicio.getText(), "Inicio")) return;
+		if(!this.txtHoraFim.getText().isBlank() && !horaValida(this.txtHoraFim.getText(), "Termino")) return;
+		if(!this.txtHoraNotificacao.getText().isBlank() && !horaValida(this.txtHoraNotificacao.getText(), "Notificação")) return;
 		
 		if((this.dateChooserInicio.getDate() != null) && (this.dateChooserFim.getDate() != null) && (this.dateChooserNotificacao.getDate() != null)) {
 			if(this.possuiDataInvalida()) return;
@@ -392,6 +440,7 @@ public class AgendaWindow extends JFrame {
 			
 			JOptionPane.showMessageDialog(this, "Compromisso atualizado com sucesso!");
 			this.agenda.setCompromissos(compromissoService.buscarCompromissosAgenda(agenda.getIdAgenda()));
+			limparCampos();
 			buscarCompromissos();
 		}else {
 			
@@ -605,5 +654,15 @@ public class AgendaWindow extends JFrame {
 		lblCadastrar.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblCadastrar.setBounds(309, 339, 308, 21);
 		contentPane.add(lblCadastrar);
+		
+		JButton btnLimparCampos = new JButton("Limpar Campos");
+		btnLimparCampos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				limparCampos();
+			}
+		});
+		btnLimparCampos.setFocusable(false);
+		btnLimparCampos.setBounds(10, 573, 117, 27);
+		contentPane.add(btnLimparCampos);
 	}
 }
