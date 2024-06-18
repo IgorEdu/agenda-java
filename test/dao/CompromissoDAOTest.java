@@ -11,23 +11,8 @@ import entities.Compromisso;
 import entities.Convite;
 
 public class CompromissoDAOTest {
-	public static void cadastrarCompromissoDAOTest() throws SQLException, IOException, ParseException {
+	public static void cadastrarCompromissoDAOTest(Compromisso compromisso) throws SQLException, IOException, ParseException {
 		Connection conn = BancoDados.conectar();
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		
-		Compromisso compromisso = new Compromisso();
-		
-		compromisso.setTitulo("Compromisso teste");
-		compromisso.setDescricao("Compromisso usado para testar a classe DAO");
-		compromisso.setDataInicio(new java.sql.Date(sdf.parse("05/05/2024").getTime()));
-		compromisso.setHorarioInicio("12:30:59");
-		compromisso.setDataTermino(new java.sql.Date(sdf.parse("05/05/2024").getTime()));
-		compromisso.setHorarioTermino("15:30:59");
-		compromisso.setLocal("Sala de reuniões");
-		compromisso.setConvites(new ArrayList<Convite>());
-		compromisso.setDataTermino(new java.sql.Date(sdf.parse("05/05/2024").getTime()));
-		compromisso.setHorarioTermino("11:30:00");
 
 		new CompromissoDAO(conn).cadastrar(compromisso);
 
@@ -87,12 +72,52 @@ public class CompromissoDAOTest {
 		return compromisso;
 	}
 	
+	public static Compromisso buscarCompromissoSemIdCompromissoDAOTest(Compromisso compromissoBuscado) throws SQLException, IOException {
+		Connection conn = BancoDados.conectar();
+		CompromissoDAO compromissoDAO = new CompromissoDAO(conn);
+		Compromisso compromisso = compromissoDAO.buscarCompromissoSemId(compromissoBuscado);
+		
+		System.out.println();
+		System.out.println("=====================================================");
+		System.out.println("Compromisso teste de busca:");
+		System.out.println("IdCompromisso: " + compromisso.getIdCompromisso());
+		System.out.println("Titulo: " + compromisso.getTitulo());
+		System.out.println("Descricao: "+ compromisso.getDescricao());
+		System.out.println("DataInicio: " + compromisso.getDataInicio());
+		System.out.println("HorarioInicio: " + compromisso.getHorarioInicio());
+		System.out.println("DataTermino: " + compromisso.getDataTermino());
+		System.out.println("HorarioTermino: " + compromisso.getHorarioTermino());
+		System.out.println("Local: " + compromisso.getLocal());
+		//Só verificar se traz o objeto
+		System.out.println("Convites: " + compromisso.getConvites());
+		System.out.println("DataNotificacao: " + compromisso.getDataNotificacao());
+		System.out.println("HorarioNotificacao: " + compromisso.getHorarioNotificacao());
+		System.out.println("======================================================");
+		System.out.println();
+		
+		return compromisso;
+	}
+	
 	public static void main(String[] args) {
 
 		try {
-			CompromissoDAOTest.cadastrarCompromissoDAOTest();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			Compromisso compromisso = new Compromisso();
 			
-			Compromisso compromisso1 = CompromissoDAOTest.buscarCompromissoPorIdCompromissoDAOTest(2);
+			compromisso.setTitulo("Compromisso teste");
+			compromisso.setDescricao("Compromisso usado para testar a classe DAO");
+			compromisso.setDataInicio(new java.sql.Date(sdf.parse("05/05/2024").getTime()));
+			compromisso.setHorarioInicio("12:30:59");
+			compromisso.setDataTermino(new java.sql.Date(sdf.parse("05/05/2024").getTime()));
+			compromisso.setHorarioTermino("15:30:59");
+			compromisso.setLocal("Sala de reuniões");
+			compromisso.setConvites(new ArrayList<Convite>());
+			compromisso.setDataTermino(new java.sql.Date(sdf.parse("05/05/2024").getTime()));
+			compromisso.setHorarioTermino("11:30:00");
+			
+			CompromissoDAOTest.cadastrarCompromissoDAOTest(compromisso);
+			
+			Compromisso compromisso1 = CompromissoDAOTest.buscarCompromissoSemIdCompromissoDAOTest(compromisso);
 			
 			CompromissoDAOTest.atualizarCompromissoDAOTest(compromisso1);
 			

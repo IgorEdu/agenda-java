@@ -63,12 +63,12 @@ public class AgendaDAO {
 		
 	}
 	
-	public void excluir(Agenda agenda) throws SQLException {
+	public void excluir(int idAgenda) throws SQLException {
 		PreparedStatement st = null;
 		
 		try {
 			st = conn.prepareStatement("delete from agendas where id = ?");
-			st.setInt(1, agenda.getIdAgenda());
+			st.setInt(1, idAgenda);
 			
 			st.executeUpdate();
 		} catch (SQLException e) {
