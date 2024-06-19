@@ -132,4 +132,9 @@ public class Usuario {
 	public void setFotoPessoal(String fotoPessoal) {
 		this.fotoPessoal = fotoPessoal;
 	}
+	
+	public String toString() {
+		
+		return this.nomeUsuario;
+	}
 }
