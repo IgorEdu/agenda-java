@@ -46,7 +46,6 @@ public class CompromissoWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	
-	private MaskFormatter mascaraHora;
 	private AgendaWindow agendaWindow;
 	private Compromisso compromisso;
 	private Usuario usuarioLogado;
@@ -78,18 +77,6 @@ public class CompromissoWindow extends JFrame {
 		});
 	}
 	
-	private void criarMascaraHora() {
-		
-		try {
-			
-			this.mascaraHora = new MaskFormatter("##:##");
-			
-		} catch(ParseException e) {
-			
-			JOptionPane.showMessageDialog(this, e.getMessage(), "FATAL ERROR", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-		}
-	}
 	
 	private void retornarAgendaWindow() {
 		
@@ -165,7 +152,6 @@ public class CompromissoWindow extends JFrame {
 		this.compromisso = compromisso;
 		this.usuarioLogado = usuarioLogado;
 		
-		criarMascaraHora();
 		initComponents();
 		preencherDatas();
 		popularComboBox();
