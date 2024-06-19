@@ -42,7 +42,7 @@ public class CompromissoDAOTest {
 
 		
 		Connection conn = BancoDados.conectar();
-		new CompromissoDAO(conn).excluir(compromisso);
+		new CompromissoDAO(conn).excluir(compromisso.getIdCompromisso());
 
 		System.out.println("Compromisso " + compromisso.getIdCompromisso() + " excluido com sucesso.");
 	}
