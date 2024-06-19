@@ -264,6 +264,7 @@ public class UsuarioWindow extends JFrame {
 				"ID", "Nome da Agenda", "Descri\u00E7\u00E3o"
 			}
 		));
+		tableAgendas.getTableHeader().setReorderingAllowed(false);
 		
 		btnAtualizar = new JButton("Atualizar");
 		btnAtualizar.addActionListener(new ActionListener() {
