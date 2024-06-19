@@ -11,11 +11,13 @@ public class CompromissoServiceTest {
 
 		CompromissoService compromissoService = new CompromissoService();
 		
+		UsuarioService userService = new UsuarioService();
 		Usuario usuario = new Usuario("igorzinho", "bumbum", "Igor Eduardo", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "igor@gmail.com", "igor.png");
-		if(userService.cadastrar(usuario)
-		) {
+		
+		if(userService.cadastrar(usuario)) {
 			System.out.println("Usuario cadastrado com sucesso!");
 		}
+
 		
 		userService.atualizarUsuario(usuario);
 		

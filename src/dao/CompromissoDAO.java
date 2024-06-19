@@ -74,12 +74,12 @@ public class CompromissoDAO {
 		
 	}
 	
-	public void excluir(Compromisso compromisso) throws SQLException {
+	public void excluir(int idCompromisso) throws SQLException {
 		PreparedStatement st = null;
 		
 		try {
 			st = conn.prepareStatement("delete from compromissos where id = ?");
-			st.setInt(1, compromisso.getIdCompromisso());
+			st.setInt(1, idCompromisso);
 			
 			st.executeUpdate();
 		} catch (SQLException e) {
