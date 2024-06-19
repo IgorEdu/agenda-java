@@ -166,7 +166,11 @@ public class CompromissoService {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
 		String idAgenda = String.valueOf(agenda.getIdAgenda());
-		String nomeArquivo = path.concat("/compromissos-idagenda-").concat(idAgenda).concat(".csv");
+		
+		String nomeArquivo;
+		
+		if(!path.endsWith(".csv")) nomeArquivo = path.concat(".csv");
+		else nomeArquivo = path;
 		
 		List<Compromisso> compromissos = new ArrayList<Compromisso>();
 //		boolean arquivoExiste = new File(path).exists();
