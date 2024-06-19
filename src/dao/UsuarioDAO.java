@@ -25,7 +25,7 @@ public class UsuarioDAO {
 		try {
 
 			st = conn.prepareStatement(
-					"insert into usuarios (login, senha, nome, nascimento, genero, email) values (?, ?, ?, ?, ?, ?)");
+					"insert into usuarios (login, senha, nome, nascimento, genero, email, caminho_imagem) values (?, ?, ?, ?, ?, ?, ?)");
 
 			st.setString(1, usuario.getUsername());
 			st.setString(2, usuario.getSenhaCriptografada());
@@ -33,6 +33,7 @@ public class UsuarioDAO {
 			st.setDate(4, usuario.getDataNascimento());
 			st.setString(5, usuario.getGenero());
 			st.setString(6, usuario.getEmail());
+			st.setString(7, usuario.getFotoPessoal());
 
 			st.executeUpdate();
 		} finally {
@@ -47,7 +48,7 @@ public class UsuarioDAO {
 		
 		try {
 			st = conn.prepareStatement(
-					"update usuarios set login = ?, senha = ?, nome = ?, nascimento = ?, genero = ?, email = ? where id = ?"
+					"update usuarios set login = ?, senha = ?, nome = ?, nascimento = ?, genero = ?, email = ?, caminho_imagem = ? where id = ?"
 					);
 			
 			st.setString(1, usuario.getUsername());
@@ -57,6 +58,7 @@ public class UsuarioDAO {
 			st.setString(5, usuario.getGenero());
 			st.setString(6, usuario.getEmail());
 			st.setInt(7, usuario.getId());
+			st.setString(8, usuario.getFotoPessoal());
 			
 			st.executeUpdate();
 		} catch (SQLException e) {
@@ -92,7 +94,7 @@ public class UsuarioDAO {
 		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement("select id, login, senha, nome, nascimento, genero, email from usuarios where login like ?");
+			st = conn.prepareStatement("select id, login, senha, nome, nascimento, genero, email, caminho_imagem from usuarios where login like ?");
 			st.setString(1, login);
 			
 			rs = st.executeQuery();
@@ -108,6 +110,7 @@ public class UsuarioDAO {
 				usuario.setDataNascimento(rs.getDate(5));
 				usuario.setGenero(rs.getString(6));
 				usuario.setEmail(rs.getString(7));
+				usuario.setFotoPessoal(rs.getString(8));
 
 				return usuario;
 			}
@@ -127,7 +130,7 @@ public class UsuarioDAO {
 		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement("select id, login, senha, nome, nascimento, genero, email from usuarios where id = ?");
+			st = conn.prepareStatement("select id, login, senha, nome, nascimento, genero, email, caminho_imamge from usuarios where id = ?");
 			st.setInt(1, id);
 			
 			rs = st.executeQuery();
@@ -143,6 +146,7 @@ public class UsuarioDAO {
 				usuario.setDataNascimento(rs.getDate(5));
 				usuario.setGenero(rs.getString(6));
 				usuario.setEmail(rs.getString(7));
+				usuario.setFotoPessoal(rs.getString(8));
 
 				return usuario;
 			}
@@ -163,7 +167,7 @@ public class UsuarioDAO {
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("select id, login, senha, nome, nascimento, genero, email from usuarios where id <> ?");
+			st = conn.prepareStatement("select id, login, senha, nome, nascimento, genero, email, caminho_imagem from usuarios where id <> ?");
 			st.setInt(1, usuarioLogado.getId());
 			
 			rs = st.executeQuery();
@@ -179,6 +183,7 @@ public class UsuarioDAO {
 				usuario.setDataNascimento(rs.getDate(5));
 				usuario.setGenero(rs.getString(6));
 				usuario.setEmail(rs.getString(7));
+				usuario.setFotoPessoal(rs.getString(8));
 
 				outrosUsuarios.add(usuario);
 			}
