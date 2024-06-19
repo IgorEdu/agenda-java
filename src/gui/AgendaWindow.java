@@ -6,17 +6,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entities.Agenda;
 import entities.Compromisso;
@@ -93,6 +97,13 @@ public class AgendaWindow extends JFrame {
 	
 	private void buscarCompromissos() {
 		
+		try {
+			this.agenda.setCompromissos(compromissoService.buscarCompromissosAgenda(agenda.getIdAgenda()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, "Um erro ocorreu durante a busca dos compromissos.\nPor favor reinicie o app.", "ERRO", JOptionPane.ERROR_MESSAGE);
+			return;
+		} 
 		
 		DefaultTableModel modelo = (DefaultTableModel) this.tableCompromissos.getModel();
 		modelo.fireTableDataChanged();
@@ -158,7 +169,7 @@ public class AgendaWindow extends JFrame {
 				
 				if(c.getIdCompromisso() == (int) this.tableCompromissos.getValueAt(tableCompromissos.getSelectedRow(), 0)) {
 					
-					new CompromissoWindow(this, c).setVisible(true);
+					new CompromissoWindow(this, c, agenda.getUsuario()).setVisible(true);
 					setVisible(false);
 					return;
 				}
@@ -282,9 +293,15 @@ public class AgendaWindow extends JFrame {
 		c.setDataNotificacao(Date.valueOf(sdf.format(this.dateChooserNotificacao.getDate())));
 		c.setHorarioNotificacao(this.txtHoraNotificacao.getText());
 		
-		this.agenda.getCompromissos().add(c);
-		limparCampos();
-		buscarCompromissos();
+		try {
+			
+			this.compromissoService.cadastrar(c, agenda);
+			limparCampos();
+			buscarCompromissos();
+		}catch(Exception e) {
+			
+			JOptionPane.showMessageDialog(this, "Não foi possível realizar o cadastro.", "ERRO!", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void excluirCompromisso() {
@@ -295,10 +312,15 @@ public class AgendaWindow extends JFrame {
 		
 		if(res == JOptionPane.YES_OPTION) {
 			
-			compromissoService.excluirCompromisso((int)tableCompromissos.getValueAt(tableCompromissos.getSelectedRow(), 0));
-			this.agenda.setCompromissos(compromissoService.buscarCompromissosAgenda(agenda.getIdAgenda()));
-			JOptionPane.showMessageDialog(this, "Compromisso excluido com sucesso!");
-			buscarCompromissos();
+			try {
+				compromissoService.excluirCompromisso((int)tableCompromissos.getValueAt(tableCompromissos.getSelectedRow(), 0));
+				JOptionPane.showMessageDialog(this, "Compromisso excluido com sucesso!");
+				buscarCompromissos();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(this, "Um erro ocorreu durante a exclusão!", "ERRO", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 		}
 	}
 	
@@ -435,17 +457,76 @@ public class AgendaWindow extends JFrame {
 				}
 			}
 		}
+		try {
+			if(compromissoService.atualizarCompromisso(novo) == 1) {
+				
+				JOptionPane.showMessageDialog(this, "Compromisso atualizado com sucesso!");
+				limparCampos();
+				buscarCompromissos();
+			}else {
+				
+				JOptionPane.showMessageDialog(this, "OCORREU UM ERRO!", "ERRO FATAL", JOptionPane.ERROR_MESSAGE);
+				System.exit(0);
+			}
+		} catch(Exception e) {
+			
+			JOptionPane.showMessageDialog(this, "Um erro ocorreu durante a atualização!", "ERRO", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+	}
+	
+	private void exportarCSV() {
 		
-		if(compromissoService.atualizarCompromisso(antigo.getIdCompromisso(), novo) == 1) {
+		if(this.agenda.getCompromissos() == null) {
+			JOptionPane.showMessageDialog(this, "Não é possível exportar pois a agenda não possue nenhum compromisso!");
+			return;
+		}
+		
+		JFileChooser chooser = new JFileChooser();
+		
+		FileNameExtensionFilter filtroCsv = new FileNameExtensionFilter("Arquivo CSV (.csv)", ".csv");
+		chooser.setFileFilter(filtroCsv);
+		
+		int res = chooser.showSaveDialog(this);
+		
+		if(res == JFileChooser.APPROVE_OPTION) {
 			
-			JOptionPane.showMessageDialog(this, "Compromisso atualizado com sucesso!");
-			this.agenda.setCompromissos(compromissoService.buscarCompromissosAgenda(agenda.getIdAgenda()));
-			limparCampos();
+			String caminho = chooser.getSelectedFile().getAbsolutePath();
+			
+			this.compromissoService.exportarArquivoCSV(caminho, this.agenda);
+			
+			JOptionPane.showMessageDialog(this, "Arquivo exportado com sucesso!");
+		} else if(res == JFileChooser.ERROR_OPTION) {
+			
+			JOptionPane.showMessageDialog(this, "Um erro ocorreu ao salvar o arquivo!\nTente novamente.", "ERRO", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+	}
+	
+	private void importarCSV() {
+		
+		JFileChooser chooser = new JFileChooser();
+		
+		FileNameExtensionFilter filtroCsv = new FileNameExtensionFilter("Arquivo CSV (.csv)", ".csv");
+		chooser.setFileFilter(filtroCsv);
+		
+		int res = chooser.showOpenDialog(this);
+		
+		if(res == JFileChooser.APPROVE_OPTION) {
+			
+			String caminho = chooser.getSelectedFile().getAbsolutePath();
+			
+			if(!caminho.endsWith(".csv")) {
+				JOptionPane.showMessageDialog(this, "Só é possível realizar a importação de arquivos CSV (.csv)!", "ERRO", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			
+			compromissoService.importarArquivoCSV(caminho, agenda);
 			buscarCompromissos();
-		}else {
+		}else if (res == JFileChooser.ERROR_OPTION) {
 			
-			JOptionPane.showMessageDialog(this, "OCORREU UM ERRO!", "ERRO FATAL", JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
+			JOptionPane.showMessageDialog(this, "Um erro durante a importação do arquivo!\nTente novamente.", "ERRO", JOptionPane.ERROR_MESSAGE);
+			return;
 		}
 	}
 
@@ -460,7 +541,6 @@ public class AgendaWindow extends JFrame {
 		criarMascaraHora();
 		initComponents();
 		
-		this.agenda.setCompromissos(compromissoService.buscarCompromissosAgenda(agenda.getIdAgenda()));
 		buscarCompromissos();
 	}
 	
@@ -519,6 +599,7 @@ public class AgendaWindow extends JFrame {
 				abrirJanelaCompromisso(e);
 			}
 		});
+		tableCompromissos.getTableHeader().setReorderingAllowed(false);
 		
 		JButton btnExcluir = new JButton("Excluir");
 		btnExcluir.addActionListener(new ActionListener() {
@@ -664,5 +745,25 @@ public class AgendaWindow extends JFrame {
 		btnLimparCampos.setFocusable(false);
 		btnLimparCampos.setBounds(10, 573, 117, 27);
 		contentPane.add(btnLimparCampos);
+		
+		JButton btnExportar = new JButton("Exportar");
+		btnExportar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				exportarCSV();
+			}
+		});
+		btnExportar.setFocusable(false);
+		btnExportar.setBounds(828, 13, 110, 27);
+		contentPane.add(btnExportar);
+		
+		JButton btnImportar = new JButton("Importar");
+		btnImportar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				importarCSV();
+			}
+		});
+		btnImportar.setFocusable(false);
+		btnImportar.setBounds(703, 13, 104, 27);
+		contentPane.add(btnImportar);
 	}
 }
