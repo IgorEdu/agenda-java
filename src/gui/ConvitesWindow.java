@@ -18,6 +18,8 @@ import service.AgendaService;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -218,11 +220,11 @@ public class ConvitesWindow extends JFrame {
 	private boolean possuiSelecaoAgendaValida() {
 		
 		if(tableConvites.getSelectedRowCount() > 1) {
-			JOptionPane.showMessageDialog(this, "Selecione apenas UMA agenda!", "AVISO!", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Selecione apenas UM convite!", "AVISO!", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 		if(tableConvites.getSelectedRow() == -1) {
-			JOptionPane.showMessageDialog(this, "Por favor seleciona uma agenda!");
+			JOptionPane.showMessageDialog(this, "Por favor seleciona um convite!");
 			return false;
 		}
 		return true;
@@ -230,7 +232,57 @@ public class ConvitesWindow extends JFrame {
 	
 	private void aceitarConvite() {
 		
+		if(!possuiSelecaoAgendaValida()) return;
+		if(this.cbAgendas.getSelectedItem() == null) {
+			JOptionPane.showMessageDialog(this, "Por favor selecione uma agenda", "AVISO", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 		
+		int idConvite = (int) this.tableConvites.getValueAt(this.tableConvites.getSelectedRow(), 0);
+		
+		try {
+			Convite convite = new ConviteService().buscarConvitePorIdConvite(idConvite);
+			convite.aceitarConvite();
+			if(new ConviteService().atualizar(convite) == 1) {
+				JOptionPane.showMessageDialog(this, "Convite aceito com sucesso!");
+				
+//				TODO metodo para buscar compromisso por id
+//				Compromisso compromisso = buscarCompromissoporID;
+				
+//				new CompromissoService().cadastrar(compromisso, this.cbAgendas.getSelectedItem());
+				
+				return;
+			}else {
+				JOptionPane.showMessageDialog(this, "Não foi possível aceitar o convite!\nTente novamente.", "ERRO", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+		} catch (SQLException | IOException e) {
+			
+			JOptionPane.showMessageDialog(this, "Não foi possível aceitar o convite!\nTente novamente.", "ERRO", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+	}
+	
+	private void recusarConvite() {
+		
+		if(!possuiSelecaoAgendaValida()) return;
+		
+		int idConvite = (int) this.tableConvites.getValueAt(this.tableConvites.getSelectedRow(), 0);
+		
+		try {
+			Convite convite = new ConviteService().buscarConvitePorIdConvite(idConvite);
+			convite.recusarConvite();
+			if(new ConviteService().atualizar(convite) == 1) {
+				JOptionPane.showMessageDialog(this, "Convite recusado!");
+				return;
+			}else {
+				JOptionPane.showMessageDialog(this, "Um erro ocorreu ao recusar o convite!", "ERRO", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+		} catch(SQLException | IOException e) {
+			JOptionPane.showMessageDialog(this, "Não foi possível recusar o convite!\nTente novamente.", "ERRO", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 	}
 
 	/**
@@ -344,6 +396,11 @@ public class ConvitesWindow extends JFrame {
 		contentPane.add(btnAceitar);
 		
 		btnRecusar = new JButton("Recusar");
+		btnRecusar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				recusarConvite();
+			}
+		});
 		btnRecusar.setForeground(Color.WHITE);
 		btnRecusar.setFocusable(false);
 		btnRecusar.setBorderPainted(false);
