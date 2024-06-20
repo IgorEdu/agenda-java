@@ -94,7 +94,14 @@ public class ConvitesWindow extends JFrame {
 			
 			//TODO buscar compromisso no BD
 			
-			Compromisso compromisso = convite.getCompromisso();
+			Compromisso compromisso;
+			try {
+				compromisso = new CompromissoService().buscarCompromissoPorId(convite.getCompromisso().getIdCompromisso());
+			} catch (SQLException | IOException e) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(this, "Um erro ocorreu ao buscar por seus convites!", "ERRO",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			
 			DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' uuuu, 'as' HH:mm", Locale.of("pt", "BR"));
 			
@@ -122,9 +129,9 @@ public class ConvitesWindow extends JFrame {
 			modelo.addRow(new Object[] {
 					
 					convite.getId(),
-					convite.getCompromisso().getTitulo(),
-					convite.getCompromisso().getDescricao(),
-					convite.getCompromisso().getLocal(),
+					compromisso.getTitulo(),
+					compromisso.getDescricao(),
+					compromisso.getLocal(),
 					formato.format(dataInicio),
 					formato.format(dataFim),
 					dataNotificacao,
@@ -146,9 +153,14 @@ public class ConvitesWindow extends JFrame {
 		
 		for(Convite convite : this.convitesUsuario) {
 			
-			//TODO buscar compromisso no BD
-			
-			Compromisso compromisso = convite.getCompromisso();
+			Compromisso compromisso;
+			try {
+				compromisso = new CompromissoService().buscarCompromissoPorId(convite.getCompromisso().getIdCompromisso());
+			} catch (SQLException | IOException e) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(this, "Um erro ocorreu ao buscar por seus convites!", "ERRO",JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			
 			//Data de Inicio com tempo incluso
 			LocalDateTime dataInicio = LocalDate.parse(compromisso.getDataInicio().toString())
@@ -167,9 +179,9 @@ public class ConvitesWindow extends JFrame {
 			modelo.addRow(new Object[] {
 					
 					convite.getId(),
-					convite.getCompromisso().getTitulo(),
-					convite.getCompromisso().getDescricao(),
-					convite.getCompromisso().getLocal(),
+					compromisso.getTitulo(),
+					compromisso.getDescricao(),
+					compromisso.getLocal(),
 					formato.format(dataInicio),
 					formato.format(dataFim),
 					formato.format(dataNotificacao),
@@ -246,10 +258,9 @@ public class ConvitesWindow extends JFrame {
 			if(new ConviteService().atualizar(convite) == 1) {
 				JOptionPane.showMessageDialog(this, "Convite aceito com sucesso!");
 				
-//				TODO metodo para buscar compromisso por id
-//				Compromisso compromisso = buscarCompromissoporID;
+				Compromisso compromisso = new CompromissoService().buscarCompromissoPorId(convite.getCompromisso().getIdCompromisso());
 				
-//				new CompromissoService().cadastrar(compromisso, this.cbAgendas.getSelectedItem());
+				new CompromissoService().cadastrar(compromisso, (Agenda) this.cbAgendas.getSelectedItem());
 				
 				return;
 			}else {
@@ -274,6 +285,7 @@ public class ConvitesWindow extends JFrame {
 			convite.recusarConvite();
 			if(new ConviteService().atualizar(convite) == 1) {
 				JOptionPane.showMessageDialog(this, "Convite recusado!");
+				new ConviteService().atualizar(convite);
 				return;
 			}else {
 				JOptionPane.showMessageDialog(this, "Um erro ocorreu ao recusar o convite!", "ERRO", JOptionPane.ERROR_MESSAGE);
