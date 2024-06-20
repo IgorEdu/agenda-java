@@ -20,6 +20,13 @@ public class Convite {
 		this.compromisso = compromisso;
 	}
 	
+	public Convite(Usuario usuario, StatusConvite statusConvite, Compromisso compromisso) {
+		super();
+		this.usuario = usuario;
+		this.statusConvite = StatusConvite.PENDENTE;
+		this.compromisso = compromisso;
+	}
+	
 	public boolean aceitarConvite() {
 		if(this.statusConvite != StatusConvite.PENDENTE) {
 			statusConvite = StatusConvite.ACEITO;
