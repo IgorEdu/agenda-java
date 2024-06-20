@@ -79,6 +79,8 @@ public class ConvitesWindow extends JFrame {
 		
 		this.btnPendentes.setEnabled(false);
 		this.btnTodos.setEnabled(true);
+		this.btnAceitar.setEnabled(true);
+		this.btnRecusar.setEnabled(true);
 		
 		DefaultTableModel modelo = (DefaultTableModel) this.tableConvites.getModel();
 		modelo.fireTableDataChanged();
@@ -92,6 +94,8 @@ public class ConvitesWindow extends JFrame {
 			
 			Compromisso compromisso = convite.getCompromisso();
 			
+			DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' uuuu, 'as' HH:mm", Locale.of("pt", "BR"));
+			
 			//Data de Inicio com tempo incluso
 			LocalDateTime dataInicio = LocalDate.parse(compromisso.getDataInicio().toString())
 												.atTime(Integer.parseInt(compromisso.getHorarioInicio().substring(0, 2)), Integer.parseInt(compromisso.getHorarioInicio().substring(3, 5)));
@@ -99,12 +103,19 @@ public class ConvitesWindow extends JFrame {
 			//Data de fim com tempo incluso
 			LocalDateTime dataFim = LocalDate.parse(compromisso.getDataTermino().toString())
 											 .atTime(Integer.parseInt(compromisso.getHorarioTermino().substring(0, 2)), Integer.parseInt(compromisso.getHorarioTermino().substring(3, 5)));
-					
-			//Data de notificacao com tempo incluso
-			LocalDateTime dataNotificacao = LocalDate.parse(compromisso.getDataNotificacao().toString())
-													 .atTime(Integer.parseInt(compromisso.getHorarioNotificacao().substring(0, 2)), Integer.parseInt(compromisso.getHorarioNotificacao().substring(3, 5)));
 			
-			DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' uuuu, 'as' HH:mm", Locale.of("pt", "BR"));
+			String dataNotificacao;
+			if(compromisso.getDataNotificacao() == null) {
+				
+				dataNotificacao = "Não Possui";
+			}else {
+				
+				//Data de notificacao com tempo incluso
+				LocalDateTime diaHoraNotificacao = LocalDate.parse(compromisso.getDataNotificacao().toString())
+						.atTime(Integer.parseInt(compromisso.getHorarioNotificacao().substring(0, 2)), Integer.parseInt(compromisso.getHorarioNotificacao().substring(3, 5)));
+				dataNotificacao = formato.format(diaHoraNotificacao);
+			}
+			
 			
 			modelo.addRow(new Object[] {
 					
@@ -114,7 +125,7 @@ public class ConvitesWindow extends JFrame {
 					convite.getCompromisso().getLocal(),
 					formato.format(dataInicio),
 					formato.format(dataFim),
-					formato.format(dataNotificacao),
+					dataNotificacao,
 					convite.getStatusConvite()
 			});
 		}
@@ -124,6 +135,8 @@ public class ConvitesWindow extends JFrame {
 		
 		this.btnPendentes.setEnabled(true);
 		this.btnTodos.setEnabled(false);
+		this.btnAceitar.setEnabled(false);
+		this.btnRecusar.setEnabled(false);
 		
 		DefaultTableModel modelo = (DefaultTableModel) this.tableConvites.getModel();
 		modelo.fireTableDataChanged();
@@ -200,6 +213,24 @@ public class ConvitesWindow extends JFrame {
 			JOptionPane.showMessageDialog(this, "Um erro ocorreu ao buscar por seus convites!\nPor favor reinicie o aplicativo.", "ERRO", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
+	}
+	
+	private boolean possuiSelecaoAgendaValida() {
+		
+		if(tableConvites.getSelectedRowCount() > 1) {
+			JOptionPane.showMessageDialog(this, "Selecione apenas UMA agenda!", "AVISO!", JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		if(tableConvites.getSelectedRow() == -1) {
+			JOptionPane.showMessageDialog(this, "Por favor seleciona uma agenda!");
+			return false;
+		}
+		return true;
+	}
+	
+	private void aceitarConvite() {
+		
+		
 	}
 
 	/**
@@ -303,6 +334,11 @@ public class ConvitesWindow extends JFrame {
 		contentPane.add(lblAgenda);
 		
 		btnAceitar = new JButton("Aceitar");
+		btnAceitar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				aceitarConvite();
+			}
+		});
 		btnAceitar.setFocusable(false);
 		btnAceitar.setBounds(590, 447, 123, 40);
 		contentPane.add(btnAceitar);
