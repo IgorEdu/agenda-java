@@ -11,6 +11,24 @@ import entities.Convite;
 
 public class ConviteService {
 
+	public void cadastrar(Convite convite) throws SQLException, IOException{
+		
+		Connection conn = BancoDados.conectar();
+		new ConviteDAO(conn).cadastrar(convite);
+	}
+	
+	public void atualizar(Convite convite) throws SQLException, IOException{
+		
+		Connection conn = BancoDados.conectar();
+		new ConviteDAO(conn).atualizar(convite);
+	}
+	
+	public void excluir(Convite convite) throws SQLException, IOException{
+		
+		Connection conn = BancoDados.conectar();
+		new ConviteDAO(conn).excluir(convite);
+	}
+	
 	public List<Convite> buscarConvitesPorIdConvidado(int idUsuario) throws SQLException, IOException{
 		
 		List<Convite> convites = null;
@@ -22,6 +40,16 @@ public class ConviteService {
 		} finally {
 			BancoDados.desconectar();
 		}
+		return convites;
+	}
+	
+	public List<Convite> buscarConvitesPorIdCompromisso(int idCompromisso) throws SQLException, IOException {
+		
+		List<Convite> convites = null;
+		
+		Connection conn = BancoDados.conectar();
+		convites = new ConviteDAO(conn).buscarConvitesPorIdCompromisso(idCompromisso);
+		
 		return convites;
 	}
 }
