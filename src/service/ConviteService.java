@@ -17,16 +17,27 @@ public class ConviteService {
 		new ConviteDAO(conn).cadastrar(convite);
 	}
 	
-	public void atualizar(Convite convite) throws SQLException, IOException{
+	public int atualizar(Convite convite) throws SQLException, IOException{
 		
 		Connection conn = BancoDados.conectar();
-		new ConviteDAO(conn).atualizar(convite);
+		int res = new ConviteDAO(conn).atualizar(convite);
+		return res;
 	}
 	
-	public void excluir(Convite convite) throws SQLException, IOException{
+	public int excluir(Convite convite) throws SQLException, IOException{
 		
 		Connection conn = BancoDados.conectar();
-		new ConviteDAO(conn).excluir(convite);
+		return new ConviteDAO(conn).excluir(convite);
+	}
+	
+	public Convite buscarConvitePorIdConvite(int idConvite) throws SQLException, IOException{
+		
+		Convite convite = null;
+		
+		Connection conn = BancoDados.conectar();
+		convite = new ConviteDAO(conn).buscarConvitePorIdConvite(idConvite);
+		
+		return convite;
 	}
 	
 	public List<Convite> buscarConvitesPorIdConvidado(int idUsuario) throws SQLException, IOException{
