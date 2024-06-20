@@ -38,9 +38,10 @@ public class ConviteDAO {
 		}
 	}
 	
-	public void atualizar(Convite convite) throws SQLException {
+	public int atualizar(Convite convite) throws SQLException {
 		
 		PreparedStatement st = null;
+		int res = 0;
 		
 		try {
 			st = conn.prepareStatement(
@@ -52,7 +53,7 @@ public class ConviteDAO {
 			st.setInt(3, convite.getCompromisso().getIdCompromisso());
 			st.setInt(4, convite.getId());
 			
-			st.executeUpdate();
+			res = st.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,16 +62,18 @@ public class ConviteDAO {
 			BancoDados.desconectar();
 		}
 		
+		return res;
 	}
 	
-	public void excluir(Convite convite) throws SQLException {
+	public int excluir(Convite convite) throws SQLException {
 		PreparedStatement st = null;
+		int res = 0;
 		
 		try {
 			st = conn.prepareStatement("delete from convites where id = ?");
 			st.setInt(1, convite.getId());
 			
-			st.executeUpdate();
+			res = st.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -78,7 +81,7 @@ public class ConviteDAO {
 			BancoDados.finalizarStatement(st);
 			BancoDados.desconectar();
 		}
-		
+		return res;
 	}
 	
 	public Convite buscarConvitePorIdConvite(int idConvite) throws SQLException, IOException {
