@@ -41,7 +41,15 @@ public class CompromissoService {
 		e.printStackTrace();
 	}
 	
-}
+	}
+	
+	public Compromisso buscarCompromissoPorId(int idCompromisso) throws SQLException, IOException{
+		
+		Connection conn = BancoDados.conectar();
+		Compromisso compromisso = new CompromissoDAO(conn).buscarCompromissoPorIdCompromisso(idCompromisso);
+		
+		return compromisso;
+	}
 	
 	public List<Compromisso> buscarCompromissosAgenda(int idAgenda) throws SQLException, IOException{
 		Connection conn = BancoDados.conectar();
