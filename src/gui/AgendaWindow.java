@@ -13,6 +13,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -39,6 +41,7 @@ import javax.swing.JTextArea;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JSeparator;
+import javax.swing.JCheckBox;
 
 public class AgendaWindow extends JFrame {
 
@@ -59,6 +62,7 @@ public class AgendaWindow extends JFrame {
 	private JFormattedTextField txtHoraFim;
 	private JDateChooser dateChooserNotificacao;
 	private JFormattedTextField txtHoraNotificacao;
+	private JCheckBox chckbxSemDataNotificacao;
 
 	/**
 	 * Launch the application.
@@ -114,16 +118,38 @@ public class AgendaWindow extends JFrame {
 			return;
 		}
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' uuuu, 'as' HH:mm", Locale.of("pt", "BR"));
 		
 		for(Compromisso c : this.agenda.getCompromissos()) {
+			
+			
+			//Data de Inicio com tempo incluso
+			LocalDateTime dataInicio = LocalDate.parse(c.getDataInicio().toString())
+												.atTime(Integer.parseInt(c.getHorarioInicio().substring(0, 2)), Integer.parseInt(c.getHorarioInicio().substring(3, 5)));
+					
+			//Data de fim com tempo incluso
+			LocalDateTime dataFim = LocalDate.parse(c.getDataTermino().toString())
+											 .atTime(Integer.parseInt(c.getHorarioTermino().substring(0, 2)), Integer.parseInt(c.getHorarioTermino().substring(3, 5)));
+			
+			String dataNotificacao;
+			if(c.getDataNotificacao() == null) {
+				
+				dataNotificacao = "Não Possui";
+			}else {
+				
+				//Data de notificacao com tempo incluso
+				LocalDateTime diaHoraNotificacao = LocalDate.parse(c.getDataNotificacao().toString())
+						.atTime(Integer.parseInt(c.getHorarioNotificacao().substring(0, 2)), Integer.parseInt(c.getHorarioNotificacao().substring(3, 5)));
+				dataNotificacao = formato.format(diaHoraNotificacao);
+			}
 			
 			modelo.addRow(new Object[] {
 					c.getIdCompromisso(),
 					c.getTitulo(),
 					c.getLocal(),
-					sdf.format(c.getDataNotificacao()),
-					c.getHorarioNotificacao()
+					formato.format(dataInicio),
+					formato.format(dataFim),
+					dataNotificacao
 			});
 		}
 	}
@@ -191,8 +217,11 @@ public class AgendaWindow extends JFrame {
 		if(this.dateChooserFim.getDate() == null) return true;
 		if(this.txtHoraFim.getText().replace(":", "").isBlank()) return true;
 		
-		if(this.dateChooserNotificacao.getDate() == null) return true;
-		if(this.txtHoraNotificacao.getText().replace(":", "").isBlank()) return true;
+		if(!this.chckbxSemDataNotificacao.isEnabled()) {
+			
+			if(this.dateChooserNotificacao.getDate() == null) return true;
+			if(this.txtHoraNotificacao.getText().replace(":", "").isBlank()) return true;
+		}
 		
 		return false;
 	}
@@ -208,10 +237,6 @@ public class AgendaWindow extends JFrame {
 		//Data de fim com tempo incluso
 		LocalDateTime dataFim = LocalDate.parse(sdf.format(this.dateChooserFim.getDate()))
 				.atTime(Integer.parseInt(this.txtHoraFim.getText().substring(0, 2)), Integer.parseInt(this.txtHoraFim.getText().substring(3, 5)));
-		
-		//Data de notificacao com tempo incluso
-		LocalDateTime dataNotificacao = LocalDate.parse(sdf.format(this.dateChooserNotificacao.getDate()))
-				.atTime(Integer.parseInt(this.txtHoraNotificacao.getText().substring(0, 2)), Integer.parseInt(this.txtHoraNotificacao.getText().substring(3, 5)));
 		
 		//Por hora comentado, pois nao sei se pode ser criado um compromisso cuja data inicial ja passou!
 		/*if(dataInicio.isBefore(LocalDateTime.now())) {
@@ -236,13 +261,19 @@ public class AgendaWindow extends JFrame {
 			return true;
 		}
 		
-		if(dataNotificacao.isBefore(LocalDateTime.now())) {
-			JOptionPane.showMessageDialog(this, "Date e horario de notificação NÃO podem ser uma data que ja passou!", "AVISO!", JOptionPane.WARNING_MESSAGE);
-			this.dateChooserFim.setDate(null);
-			this.txtHoraFim.setValue(null);
-			return true;
+		if(!this.chckbxSemDataNotificacao.isSelected()) {
+			
+			//Data de notificacao com tempo incluso
+			LocalDateTime dataNotificacao = LocalDate.parse(sdf.format(this.dateChooserNotificacao.getDate()))
+					.atTime(Integer.parseInt(this.txtHoraNotificacao.getText().substring(0, 2)), Integer.parseInt(this.txtHoraNotificacao.getText().substring(3, 5)));
+			
+			if(dataNotificacao.isBefore(LocalDateTime.now())) {
+				JOptionPane.showMessageDialog(this, "Date e horario de notificação NÃO podem ser uma data que ja passou!", "AVISO!", JOptionPane.WARNING_MESSAGE);
+				this.dateChooserFim.setDate(null);
+				this.txtHoraFim.setValue(null);
+				return true;
+			}
 		}
-		
 		return false;
 	}
 	
@@ -327,6 +358,11 @@ public class AgendaWindow extends JFrame {
 	private void atualizarCompromisso() {
 		
 		Compromisso antigo = null;
+		
+		if(this.agenda.getCompromissos() == null) {
+			JOptionPane.showMessageDialog(this, "Você não possui nenhum compromisso cadastrado!");
+			return;
+		}
 		
 		for(Compromisso c : this.agenda.getCompromissos()) {
 			if(c.getIdCompromisso() == (int) tableCompromissos.getValueAt(tableCompromissos.getSelectedRow(), 0)) {
@@ -438,23 +474,32 @@ public class AgendaWindow extends JFrame {
 				novo.setHorarioNotificacao(antigo.getHorarioNotificacao());
 			}
 			else {
-				if(this.txtHoraNotificacao.getText().replace(":", "").isBlank()) {
-					JOptionPane.showMessageDialog(this, "Por favor informe a hora de Notificacao!");
-					return;
-				}
-				LocalDateTime dataNotificacao = LocalDate.parse(sdf.format(this.dateChooserNotificacao.getDate()))
-						.atTime(Integer.parseInt(this.txtHoraNotificacao.getText().substring(0, 2)), Integer.parseInt(this.txtHoraNotificacao.getText().substring(3, 5)));
 				
-				if(dataNotificacao.isBefore(LocalDateTime.now())) {
-					JOptionPane.showMessageDialog(this, "Date e horario de Notificacao NÃO podem ser uma data que ja passou!", "AVISO!", JOptionPane.WARNING_MESSAGE);
-					this.dateChooserNotificacao.setDate(null);
-					this.txtHoraNotificacao.setValue(null);
-					return;
-				} else {
+				if(this.chckbxSemDataNotificacao.isSelected()) {
 					
-					novo.setDataNotificacao(Date.valueOf(sdf.format(this.dateChooserNotificacao.getDate())));
-					novo.setHorarioNotificacao(this.txtHoraNotificacao.getText());
+					novo.setDataNotificacao(null);
+					novo.setHorarioNotificacao("");
+				}else {
+					
+					if(this.txtHoraNotificacao.getText().replace(":", "").isBlank()) {
+						JOptionPane.showMessageDialog(this, "Por favor informe a hora de Notificacao!");
+						return;
+					}
+					LocalDateTime dataNotificacao = LocalDate.parse(sdf.format(this.dateChooserNotificacao.getDate()))
+							.atTime(Integer.parseInt(this.txtHoraNotificacao.getText().substring(0, 2)), Integer.parseInt(this.txtHoraNotificacao.getText().substring(3, 5)));
+					
+					if(dataNotificacao.isBefore(LocalDateTime.now())) {
+						JOptionPane.showMessageDialog(this, "Date e horario de Notificacao NÃO podem ser uma data que ja passou!", "AVISO!", JOptionPane.WARNING_MESSAGE);
+						this.dateChooserNotificacao.setDate(null);
+						this.txtHoraNotificacao.setValue(null);
+						return;
+					} else {
+						
+						novo.setDataNotificacao(Date.valueOf(sdf.format(this.dateChooserNotificacao.getDate())));
+						novo.setHorarioNotificacao(this.txtHoraNotificacao.getText());
+					}
 				}
+				
 			}
 		}
 		try {
@@ -529,6 +574,22 @@ public class AgendaWindow extends JFrame {
 			return;
 		}
 	}
+	
+	private void tirarDataNotificacao() {
+		
+		Boolean ativado;
+		
+		if(this.chckbxSemDataNotificacao.isSelected()) {
+			
+			ativado = false;
+		}else {
+			
+			ativado = true;
+		}
+		
+		this.dateChooserNotificacao.setEnabled(ativado);
+		this.txtHoraNotificacao.setEnabled(ativado);
+	}
 
 	/**
 	 * Create the frame.
@@ -590,7 +651,7 @@ public class AgendaWindow extends JFrame {
 			new Object[][] {
 			},
 			new String[] {
-				"ID", "Titulo", "Local", "Dia da Notifica\u00E7\u00E3o","Hora da Notifica\u00E7\u00E3o"
+				"ID", "Titulo", "Local", "Data Inicio", "Data Termino", "Data Notifica\u00E7\u00E3o"
 			}
 		));
 		tableCompromissos.addMouseListener(new MouseAdapter() {
@@ -768,5 +829,14 @@ public class AgendaWindow extends JFrame {
 		btnImportar.setFocusable(false);
 		btnImportar.setBounds(703, 13, 104, 27);
 		contentPane.add(btnImportar);
+		
+		chckbxSemDataNotificacao = new JCheckBox("Não quero notificações");
+		chckbxSemDataNotificacao.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tirarDataNotificacao();
+			}
+		});
+		chckbxSemDataNotificacao.setBounds(737, 502, 157, 23);
+		contentPane.add(chckbxSemDataNotificacao);
 	}
 }

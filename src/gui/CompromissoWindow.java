@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.EventQueue;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -19,12 +20,16 @@ import javax.swing.text.MaskFormatter;
 
 import entities.Agenda;
 import entities.Compromisso;
+import entities.Convite;
+import entities.StatusConvite;
 import entities.Usuario;
+import service.ConviteService;
 import service.UsuarioService;
 
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -88,6 +93,7 @@ public class CompromissoWindow extends JFrame {
 	private void preencherDatas() {
 		
 		SimpleDateFormat data = new SimpleDateFormat("yyyy-MM-dd");
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' uuuu, 'as' HH:mm", Locale.of("pt", "BR"));
 		
 		//Data de Inicio com tempo incluso
 		LocalDateTime dataInicio = LocalDate.parse(data.format(compromisso.getDataInicio()))
@@ -96,18 +102,23 @@ public class CompromissoWindow extends JFrame {
 		//Data de fim com tempo incluso
 		LocalDateTime dataFim = LocalDate.parse(data.format(compromisso.getDataTermino()))
 										 .atTime(Integer.parseInt(this.compromisso.getHorarioTermino().substring(0, 2)), Integer.parseInt(this.compromisso.getHorarioTermino().substring(3, 5)));
-				
-		//Data de notificacao com tempo incluso
-		LocalDateTime dataNotificacao = LocalDate.parse(data.format(compromisso.getDataNotificacao()))
-												 .atTime(Integer.parseInt(this.compromisso.getHorarioNotificacao().substring(0, 2)), Integer.parseInt(this.compromisso.getHorarioNotificacao().substring(3, 5)));
 		
-		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' uuuu, 'as' HH:mm", Locale.of("pt", "BR"));
+		if(this.compromisso.getDataNotificacao() == null) {
+			
+			//Data de notificacao com tempo incluso
+			LocalDateTime dataNotificacao = LocalDate.parse(data.format(compromisso.getDataNotificacao()))
+					.atTime(Integer.parseInt(this.compromisso.getHorarioNotificacao().substring(0, 2)), Integer.parseInt(this.compromisso.getHorarioNotificacao().substring(3, 5)));
+			
+			this.lblDataDaNotificao.setText("Data de Notificação: " + formato.format(dataNotificacao));
+		}else {
+			
+			this.lblDataDaNotificao.setText("Data de Notificação: Não Informada!");
+		}
 		
 		this.lblDataInicio.setText("Data de Início: " + formato.format(dataInicio));
 		
 		this.lblDataDeTermino.setText("Data de Término: " + formato.format(dataFim));
 		
-		this.lblDataDaNotificao.setText("Data de Notificação: " + formato.format(dataNotificacao));
 	}
 	
 	private void popularComboBox() {
@@ -122,6 +133,8 @@ public class CompromissoWindow extends JFrame {
 		}
 	}
 	
+	
+	
 	private void convidarUsuario() {
 		
 		Usuario usuario = (Usuario) this.cbUsuariosConvidaveis.getSelectedItem();
@@ -131,6 +144,19 @@ public class CompromissoWindow extends JFrame {
 			JOptionPane.showMessageDialog(this, "Selecione um usuario para poder convida-lo");
 			return;
 		}
+
+		
+		Convite convite = new Convite(usuario, StatusConvite.PENDENTE, this.compromisso);
+		
+		try {
+			
+			new ConviteService().cadastrar(convite);
+			JOptionPane.showMessageDialog(this, "Usuario convidado com sucesso!");
+		} catch (SQLException | IOException e) {
+			
+			JOptionPane.showMessageDialog(this, "Um erro ocorreu ao convidar " + usuario.getNomeUsuario() + "!\nTente Novamente.", "ERRO", JOptionPane.ERROR_MESSAGE);
+			return;
+		};
 		
 	}
 
@@ -250,5 +276,11 @@ public class CompromissoWindow extends JFrame {
 		btnConvidar.setFocusable(false);
 		btnConvidar.setBounds(706, 228, 123, 40);
 		panelConvites.add(btnConvidar);
+		
+		JLabel lblUsuario = new JLabel("Usuario:");
+		lblUsuario.setHorizontalAlignment(SwingConstants.TRAILING);
+		lblUsuario.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblUsuario.setBounds(255, 234, 133, 27);
+		panelConvites.add(lblUsuario);
 	}
 }
