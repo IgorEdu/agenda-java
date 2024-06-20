@@ -71,4 +71,9 @@ public class Agenda {
 	public void setCompromissos(List<Compromisso> compromissos) {
 		this.compromissos = compromissos;
 	}
+	
+	public String toString() {
+		
+		return this.nomeAgenda;
+	}
 }
