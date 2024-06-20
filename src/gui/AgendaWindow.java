@@ -679,14 +679,17 @@ public class AgendaWindow extends JFrame {
 		
 		dateChooserInicio = new JDateChooser();
 		dateChooserInicio.setBounds(336, 405, 147, 20);
+		dateChooserInicio.setDateFormatString("dd/MM/yyyy");
 		contentPane.add(dateChooserInicio);
 		
 		dateChooserFim = new JDateChooser();
 		dateChooserFim.setBounds(527, 411, 147, 20);
+		dateChooserFim.setDateFormatString("dd/MM/yyyy");
 		contentPane.add(dateChooserFim);
 		
 		dateChooserNotificacao = new JDateChooser();
 		dateChooserNotificacao.setBounds(737, 411, 147, 20);
+		dateChooserNotificacao.setDateFormatString("dd/MM/yyyy");
 		contentPane.add(dateChooserNotificacao);
 		
 		txtHoraInicio = new JFormattedTextField(this.mascaraHora);
