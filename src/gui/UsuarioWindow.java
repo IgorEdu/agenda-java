@@ -5,8 +5,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import entities.Agenda;
+import entities.Convite;
+import entities.StatusConvite;
 import entities.Usuario;
 import service.AgendaService;
+import service.ConviteService;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,6 +31,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class UsuarioWindow extends JFrame {
 
@@ -187,6 +192,10 @@ public class UsuarioWindow extends JFrame {
 		return;
 	}
 	
+	private void abrirJanelaConvites() {
+		
+	}
+	
 	private void deslogar() {
 		
 		int res = JOptionPane.showConfirmDialog(this, "Deseja mesmo sair da sua conta?");
@@ -196,6 +205,29 @@ public class UsuarioWindow extends JFrame {
 			new LoginWindow().setVisible(true);
 			setVisible(false);
 			dispose();
+		}
+	}
+	
+	private void checarConvites() {
+		
+		List<Convite> convites;
+		
+		try {
+			convites = new ConviteService().buscarConvitesPorIdConvidado(this.usuarioLogado.getId());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, "Não foi possível carregar os convites do Usuario!\nPor favor reinicie o aplicativo", "ERRO", JOptionPane.ERROR_MESSAGE);
+			return;
+		} 
+		
+		if(convites == null) return;
+		
+		for(Convite convite : convites) {
+			
+			if(convite.getStatusConvite().equals(StatusConvite.PENDENTE)) {
+				JOptionPane.showMessageDialog(this, "Você possui convites pendentes!\nPara vê-los clique no botão \"Ver Convites\"");
+				return;
+			}
 		}
 	}
 	
@@ -212,6 +244,7 @@ public class UsuarioWindow extends JFrame {
 		this.agendaService = new AgendaService();
 		
 		buscarAgendas();
+		checarConvites();
 	}
 	
 	public void initComponents() {
@@ -351,5 +384,14 @@ public class UsuarioWindow extends JFrame {
 		});
 		btnEditarPerfil.setBounds(815, 11, 123, 27);
 		contentPane.add(btnEditarPerfil);
+		
+		JButton btnVerConvites = new JButton("Ver Convites");
+		btnVerConvites.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				abrirJanelaConvites();
+			}
+		});
+		btnVerConvites.setBounds(665, 11, 123, 27);
+		contentPane.add(btnVerConvites);
 	}
 }
