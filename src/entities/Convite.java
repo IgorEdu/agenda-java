@@ -28,7 +28,7 @@ public class Convite {
 	}
 	
 	public boolean aceitarConvite() {
-		if(this.statusConvite != StatusConvite.PENDENTE) {
+		if(this.statusConvite == StatusConvite.PENDENTE) {
 			statusConvite = StatusConvite.ACEITO;
 			return true;
 		}
@@ -36,7 +36,7 @@ public class Convite {
 	}
 	
 	public boolean recusarConvite() {
-		if(this.statusConvite != StatusConvite.PENDENTE) {
+		if(this.statusConvite == StatusConvite.PENDENTE) {
 			statusConvite = StatusConvite.REJEITADO;
 			return true;
 		}
