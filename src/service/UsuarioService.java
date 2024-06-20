@@ -69,6 +69,13 @@ public class UsuarioService {
 		return null;
 	}
 	
+	public Usuario buscarUsuarioPorId(int id) throws SQLException, IOException {
+		
+		Connection conn = BancoDados.conectar();
+		Usuario user = new UsuarioDAO(conn).buscarUsuarioPorId(id);
+		return user;
+	}
+	
 	public List<Usuario> listarOutrosUsuario(Usuario usuario) {
 		List<Usuario> outrosUsuarios = new ArrayList<Usuario>();
 		try {
