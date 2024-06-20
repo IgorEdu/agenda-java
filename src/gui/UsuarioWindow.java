@@ -194,6 +194,8 @@ public class UsuarioWindow extends JFrame {
 	
 	private void abrirJanelaConvites() {
 		
+		new ConvitesWindow(this, this.usuarioLogado).setVisible(true);
+		setVisible(false);
 	}
 	
 	private void deslogar() {
