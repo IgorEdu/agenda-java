@@ -130,7 +130,7 @@ public class UsuarioDAO {
 		ResultSet rs = null;
 		
 		try {
-			st = conn.prepareStatement("select id, login, senha, nome, nascimento, genero, email, caminho_imamge from usuarios where id = ?");
+			st = conn.prepareStatement("select id, login, senha, nome, nascimento, genero, email, caminho_imagem from usuarios where id = ?");
 			st.setInt(1, id);
 			
 			rs = st.executeQuery();
