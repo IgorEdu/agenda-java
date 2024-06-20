@@ -63,24 +63,24 @@ public class CompromissoWindow extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UsuarioWindow usuarioWindow = new UsuarioWindow(new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png"));
-					Agenda agenda = new Agenda();
-					Usuario murilo = new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png");
-					agenda.setNomeAgenda("Agenda 1");
-					AgendaWindow agendaWindow = new AgendaWindow(usuarioWindow, agenda);
-					Compromisso comp1 = new Compromisso(1, "Comp 1", "Compromisso 1", Date.valueOf("2024-06-30"),"22:22",Date.valueOf("2024-06-30"),"23:00", "UTFPR",Date.valueOf("2024-06-30"),"22:00");
-					CompromissoWindow frame = new CompromissoWindow(agendaWindow,comp1, murilo);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					UsuarioWindow usuarioWindow = new UsuarioWindow(new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png"));
+//					Agenda agenda = new Agenda();
+//					Usuario murilo = new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png");
+//					agenda.setNomeAgenda("Agenda 1");
+//					AgendaWindow agendaWindow = new AgendaWindow(usuarioWindow, agenda);
+//					Compromisso comp1 = new Compromisso(1, "Comp 1", "Compromisso 1", Date.valueOf("2024-06-30"),"22:22",Date.valueOf("2024-06-30"),"23:00", "UTFPR",Date.valueOf("2024-06-30"),"22:00");
+//					CompromissoWindow frame = new CompromissoWindow(agendaWindow,comp1, murilo);
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 	
 	
 	private void retornarAgendaWindow() {
@@ -159,6 +159,44 @@ public class CompromissoWindow extends JFrame {
 		};
 		
 	}
+	
+	private void buscarConvidados() {
+		
+		List<Convite> convites = null;
+		
+		try {
+			convites = new ConviteService().buscarConvitesPorIdCompromisso(this.compromisso.getIdCompromisso());
+		} catch (SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(this, "1 - Um erro ocorreu ao procurar pelos Usuarios Convidados!", "ERRO", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		DefaultTableModel modelo = (DefaultTableModel) this.tableUsuariosConvidados.getModel();
+		modelo.fireTableDataChanged();
+		modelo.setRowCount(0);
+		
+		
+		for(Convite convite : convites) {
+			
+			Usuario usuarioConvidado = null;
+			
+			try {
+				usuarioConvidado = new UsuarioService().buscarUsuarioPorId(convite.getUsuario().getId());
+				System.out.println(usuarioConvidado);
+			} catch (SQLException | IOException e) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(this, "2 - Um erro ocorreu ao procurar pelos Usuarios Convidados!", "ERRO", JOptionPane.ERROR_MESSAGE);
+//				return;
+			}
+			
+			modelo.addRow(new Object[] {
+					
+					usuarioConvidado.getNomeUsuario(),
+					convite.getStatusConvite()
+			});
+		}
+	}
 
 	/**
 	 * Create the frame.
@@ -180,6 +218,7 @@ public class CompromissoWindow extends JFrame {
 		
 		initComponents();
 		preencherDatas();
+		buscarConvidados();
 		popularComboBox();
 	}
 	
