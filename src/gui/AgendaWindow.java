@@ -23,7 +23,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entities.Agenda;
 import entities.Compromisso;
+import entities.Convite;
+import entities.StatusConvite;
 import service.CompromissoService;
+import service.ConviteService;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -304,6 +307,17 @@ public class AgendaWindow extends JFrame {
 		try {
 			
 			this.compromissoService.cadastrar(c, agenda);
+			
+			for(Compromisso comp : compromissoService.buscarCompromissosAgenda(this.agenda.getIdAgenda())) {
+				if(comp.getTitulo().equalsIgnoreCase(c.getTitulo())) {
+					
+					Convite convite = new Convite(this.agenda.getUsuario(), StatusConvite.ACEITO, c);
+					convite.setStatusConvite(StatusConvite.ACEITO);
+					new ConviteService().cadastrar(convite);
+					break;
+				}
+			}
+			
 			limparCampos();
 			buscarCompromissos();
 		}catch(Exception e) {

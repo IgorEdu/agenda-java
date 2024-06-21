@@ -141,7 +141,7 @@ public class CompromissoWindow extends JFrame {
 			convites = new ConviteService().buscarConvitesPorIdCompromisso(this.compromisso.getIdCompromisso());
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
-			JOptionPane.showMessageDialog(this, "1 - Um erro ocorreu ao procurar pelos Usuarios Convidados!", "ERRO", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Um erro ocorreu ao procurar pelos Usuarios Convidados!", "ERRO", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		
@@ -159,7 +159,7 @@ public class CompromissoWindow extends JFrame {
 				usuarioConvidado = new UsuarioService().buscarUsuarioPorId(convite.getUsuario().getId());
 			} catch (SQLException | IOException e) {
 				// TODO Auto-generated catch block
-				JOptionPane.showMessageDialog(this, "2 - Um erro ocorreu ao procurar pelos Usuarios Convidados!", "ERRO", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Um erro ocorreu ao procurar pelos Usuarios Convidados!", "ERRO", JOptionPane.ERROR_MESSAGE);
 //				return;
 			}
 			
