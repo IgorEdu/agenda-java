@@ -229,6 +229,7 @@ public class UsuarioWindow extends JFrame {
 		
 		try {
 			this.notificacaoService = new NotificacaoService(usuarioLogado);
+			this.notificacaoService.start();
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
