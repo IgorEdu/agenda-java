@@ -55,20 +55,20 @@ public class ConvitesWindow extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UsuarioWindow userWindow = new UsuarioWindow(new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png"));
-					Usuario murilo = new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png");
-					ConvitesWindow frame = new ConvitesWindow(userWindow, murilo);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					UsuarioWindow userWindow = new UsuarioWindow(new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png"));
+//					Usuario murilo = new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png");
+//					ConvitesWindow frame = new ConvitesWindow(userWindow, murilo);
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 	
 	private void voltarUsuarioWindow() {
 		
@@ -286,6 +286,9 @@ public class ConvitesWindow extends JFrame {
 			if(new ConviteService().atualizar(convite) == 1) {
 				JOptionPane.showMessageDialog(this, "Convite recusado!");
 				new ConviteService().atualizar(convite);
+				
+				buscarConvitesUsuario();
+				mostrarConvitesPendentes();
 				return;
 			}else {
 				JOptionPane.showMessageDialog(this, "Um erro ocorreu ao recusar o convite!", "ERRO", JOptionPane.ERROR_MESSAGE);
