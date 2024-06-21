@@ -10,6 +10,7 @@ import entities.StatusConvite;
 import entities.Usuario;
 import service.AgendaService;
 import service.ConviteService;
+import service.NotificacaoService;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -46,22 +47,7 @@ public class UsuarioWindow extends JFrame {
 	private JButton btnExcluir;
 	private JTextField txtNomeAgenda;
 	private JTextArea txtDescricao;
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UsuarioWindow frame = new UsuarioWindow(new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png"));
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	/**
-	 * Create the frame.
-	 */
+	private NotificacaoService notificacaoService;
 	
 	private void buscarAgendas() {
 		
@@ -206,6 +192,7 @@ public class UsuarioWindow extends JFrame {
 			
 			new LoginWindow().setVisible(true);
 			setVisible(false);
+			this.notificacaoService.interrupt();
 			dispose();
 		}
 	}
@@ -239,11 +226,23 @@ public class UsuarioWindow extends JFrame {
 		setVisible(false);
 	}
 	
+	private void iniciarThread() {
+		
+		try {
+			this.notificacaoService = new NotificacaoService(usuarioLogado);
+		} catch (SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public UsuarioWindow(Usuario usuario) {
 		
 		this.usuarioLogado = usuario;
 		initComponents();
 		this.agendaService = new AgendaService();
+		
+		iniciarThread();
 		
 		buscarAgendas();
 		checarConvites();
