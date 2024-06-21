@@ -103,7 +103,7 @@ public class CompromissoWindow extends JFrame {
 		LocalDateTime dataFim = LocalDate.parse(data.format(compromisso.getDataTermino()))
 										 .atTime(Integer.parseInt(this.compromisso.getHorarioTermino().substring(0, 2)), Integer.parseInt(this.compromisso.getHorarioTermino().substring(3, 5)));
 		
-		if(this.compromisso.getDataNotificacao() == null) {
+		if(this.compromisso.getDataNotificacao() != null) {
 			
 			//Data de notificacao com tempo incluso
 			LocalDateTime dataNotificacao = LocalDate.parse(data.format(compromisso.getDataNotificacao()))
