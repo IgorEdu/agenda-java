@@ -283,7 +283,9 @@ public class AgendaWindow extends JFrame {
 		}
 		if(!horaValida(this.txtHoraInicio.getText(),"Inicio")) return;
 		if(!horaValida(this.txtHoraFim.getText(),"Termino")) return;
-		if(!horaValida(this.txtHoraNotificacao.getText(),"Notificação")) return;
+		if(!this.chckbxSemDataNotificacao.isSelected()){
+			if(!horaValida(this.txtHoraNotificacao.getText(),"Notificação")) return;
+		}
 		if(possuiDataInvalida()) return;
 		
 		
@@ -301,8 +303,15 @@ public class AgendaWindow extends JFrame {
 		c.setDataTermino(Date.valueOf(sdf.format(this.dateChooserFim.getDate())));
 		c.setHorarioTermino(this.txtHoraFim.getText());
 		
-		c.setDataNotificacao(Date.valueOf(sdf.format(this.dateChooserNotificacao.getDate())));
-		c.setHorarioNotificacao(this.txtHoraNotificacao.getText());
+		if(this.chckbxSemDataNotificacao.isSelected()) {
+			
+			c.setDataNotificacao(null);
+			c.setHorarioNotificacao(null);
+		}else {
+			
+			c.setDataNotificacao(Date.valueOf(sdf.format(this.dateChooserNotificacao.getDate())));
+			c.setHorarioNotificacao(this.txtHoraNotificacao.getText());
+		}
 		
 		try {
 			
@@ -347,6 +356,8 @@ public class AgendaWindow extends JFrame {
 	}
 	
 	private void atualizarCompromisso() {
+		
+		if(!possuiSelecaoValida()) return;
 		
 		Compromisso antigo = null;
 		

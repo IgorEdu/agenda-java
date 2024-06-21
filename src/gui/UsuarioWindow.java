@@ -205,6 +205,7 @@ public class UsuarioWindow extends JFrame {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(this, "Não foi possível carregar os convites do Usuario!\nPor favor reinicie o aplicativo", "ERRO", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 			return;
 		} 
 		
