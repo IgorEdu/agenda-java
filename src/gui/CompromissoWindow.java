@@ -144,12 +144,19 @@ public class CompromissoWindow extends JFrame {
 			JOptionPane.showMessageDialog(this, "Selecione um usuario para poder convida-lo");
 			return;
 		}
-
+		
+		for(int i = 0; i < tableUsuariosConvidados.getRowCount(); i++) {
+			
+			if((usuario.getNomeUsuario().equalsIgnoreCase((String) this.tableUsuariosConvidados.getValueAt(i, 0))) && ( (StatusConvite) this.tableUsuariosConvidados.getValueAt(i, 1)) != StatusConvite.REJEITADO) {
+				JOptionPane.showMessageDialog(this, "Usuario ja foi convidado");
+				return;
+			} 
+		}
 		
 		Convite convite = new Convite(usuario, StatusConvite.PENDENTE, this.compromisso);
 		
 		try {
-			
+				
 			new ConviteService().cadastrar(convite);
 			JOptionPane.showMessageDialog(this, "Usuario convidado com sucesso!");
 		} catch (SQLException | IOException e) {
@@ -176,14 +183,14 @@ public class CompromissoWindow extends JFrame {
 		modelo.fireTableDataChanged();
 		modelo.setRowCount(0);
 		
-		
 		for(Convite convite : convites) {
+			
+			if(convite.getStatusConvite() == StatusConvite.REJEITADO) continue;
 			
 			Usuario usuarioConvidado = null;
 			
 			try {
 				usuarioConvidado = new UsuarioService().buscarUsuarioPorId(convite.getUsuario().getId());
-				System.out.println(usuarioConvidado);
 			} catch (SQLException | IOException e) {
 				// TODO Auto-generated catch block
 				JOptionPane.showMessageDialog(this, "2 - Um erro ocorreu ao procurar pelos Usuarios Convidados!", "ERRO", JOptionPane.ERROR_MESSAGE);
