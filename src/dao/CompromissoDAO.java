@@ -167,8 +167,6 @@ public class CompromissoDAO {
 				compromisso.setLocal(rs.getString(8));
 				compromisso.setDataNotificacao(rs.getDate(9));
 				compromisso.setHorarioNotificacao(rs.getString(10));
-
-				System.out.println("Compromisso encontrado: " + compromisso.getIdCompromisso());
 				
 				return compromisso;
 			}
