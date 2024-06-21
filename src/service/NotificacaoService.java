@@ -5,8 +5,12 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import javax.swing.JOptionPane;
 
 import entities.Agenda;
 import entities.Compromisso;
@@ -44,7 +48,14 @@ public class NotificacaoService extends Thread {
 	                
 	            if(dataNotificacao.isAfter(agora.minusMinutes(1)) && dataNotificacao.isBefore(agora.plusMinutes(1))) {	            	
 	            	// Lógica para notificar o usuário
-	            	System.out.println("Notificando usuário: " + usuario.getNomeUsuario() + " sobre o compromisso: " + compromisso.getDescricao());
+	            	
+	            	DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' uuuu, 'as' HH:mm", Locale.of("pt", "BR"));
+	            	
+	            	LocalDateTime dataInicio = LocalDate.parse(data.format(compromisso.getDataInicio()))
+							.atTime(Integer.parseInt(compromisso.getHorarioInicio().substring(0, 2)), Integer.parseInt(compromisso.getHorarioInicio().substring(3, 5)));
+	            	
+	            	JOptionPane.showMessageDialog(null, "Notificação para o compromisso " + compromisso.getTitulo()
+	            										 + "\nCuja data de inicio é " + formato.format(dataInicio));
 	            }
 			}
 		}
