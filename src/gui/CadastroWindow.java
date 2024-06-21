@@ -62,7 +62,7 @@ public class CadastroWindow extends JFrame {
 	
 	private void cadastrarUsuario() {
 		
-		/*if(temCamposVazios()) {
+		if(temCamposVazios()) {
 			
 			JOptionPane.showMessageDialog(this,"Preencha todos os campos!", "AVISO!", JOptionPane.WARNING_MESSAGE);
 			return;
@@ -80,7 +80,7 @@ public class CadastroWindow extends JFrame {
 			return;
 		}
 		
-		if(!isValidDate()) return;*/
+		if(!isValidDate()) return;
 		
 		try {
 			
@@ -123,14 +123,14 @@ public class CadastroWindow extends JFrame {
 	private boolean temCamposVazios() {
 		
 		
-		/*if(this.txtUsername.getText().isBlank()) return true;
+		if(this.txtUsername.getText().isBlank()) return true;
 		if(String.valueOf(this.txtSenha.getPassword()).isBlank()) return true;
 		if(String.valueOf(this.txtConfirmarSenha.getPassword()).isBlank()) return true;
 		if(this.txtNomeUsuario.getText().isBlank()) return true;
 		if(this.txtDataNascimento.getText().replaceAll(" ", "").length() < 10)  return true; //checa campo de data vazio
 		if(getGenero().isBlank()) return true;
 		if(this.txtEmail.getText().isBlank()) return true;
-		if(this.fotoPessoal.isBlank()) return true;*/
+		if(this.fotoPessoal.isBlank()) return true;
 		
 		return false;
 	}

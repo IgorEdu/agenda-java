@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -51,24 +49,6 @@ public class ConvitesWindow extends JFrame {
 	private JComboBox cbAgendas;
 	private JButton btnAceitar;
 	private JButton btnRecusar;
-
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					UsuarioWindow userWindow = new UsuarioWindow(new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png"));
-//					Usuario murilo = new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png");
-//					ConvitesWindow frame = new ConvitesWindow(userWindow, murilo);
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 	
 	private void voltarUsuarioWindow() {
 		
@@ -92,13 +72,11 @@ public class ConvitesWindow extends JFrame {
 			
 			if(!convite.getStatusConvite().equals(StatusConvite.PENDENTE)) continue;
 			
-			//TODO buscar compromisso no BD
-			
 			Compromisso compromisso;
 			try {
 				compromisso = new CompromissoService().buscarCompromissoPorId(convite.getCompromisso().getIdCompromisso());
 			} catch (SQLException | IOException e) {
-				// TODO Auto-generated catch block
+				
 				JOptionPane.showMessageDialog(this, "Um erro ocorreu ao buscar por seus convites!", "ERRO",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
@@ -157,7 +135,7 @@ public class ConvitesWindow extends JFrame {
 			try {
 				compromisso = new CompromissoService().buscarCompromissoPorId(convite.getCompromisso().getIdCompromisso());
 			} catch (SQLException | IOException e) {
-				// TODO Auto-generated catch block
+				
 				JOptionPane.showMessageDialog(this, "Um erro ocorreu ao buscar por seus convites!", "ERRO",JOptionPane.ERROR_MESSAGE);
 				return;
 			}

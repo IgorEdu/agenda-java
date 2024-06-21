@@ -1,14 +1,11 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -26,7 +23,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import entities.Agenda;
 import entities.Compromisso;
-import entities.Usuario;
 import service.CompromissoService;
 
 import javax.swing.JTable;
@@ -63,25 +59,6 @@ public class AgendaWindow extends JFrame {
 	private JDateChooser dateChooserNotificacao;
 	private JFormattedTextField txtHoraNotificacao;
 	private JCheckBox chckbxSemDataNotificacao;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UsuarioWindow usuarioWindow = new UsuarioWindow(new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png"));
-					Agenda agenda = new Agenda();
-					agenda.setNomeAgenda("Agenda 1");
-					AgendaWindow frame = new AgendaWindow(usuarioWindow, agenda);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	private void limparCampos() {
 		
@@ -104,7 +81,7 @@ public class AgendaWindow extends JFrame {
 		try {
 			this.agenda.setCompromissos(compromissoService.buscarCompromissosAgenda(agenda.getIdAgenda()));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 			JOptionPane.showMessageDialog(this, "Um erro ocorreu durante a busca dos compromissos.\nPor favor reinicie o app.", "ERRO", JOptionPane.ERROR_MESSAGE);
 			return;
 		} 
@@ -239,12 +216,12 @@ public class AgendaWindow extends JFrame {
 				.atTime(Integer.parseInt(this.txtHoraFim.getText().substring(0, 2)), Integer.parseInt(this.txtHoraFim.getText().substring(3, 5)));
 		
 		//Por hora comentado, pois nao sei se pode ser criado um compromisso cuja data inicial ja passou!
-		/*if(dataInicio.isBefore(LocalDateTime.now())) {
+		if(dataInicio.isBefore(LocalDateTime.now())) {
 			JOptionPane.showMessageDialog(this, "Date e horario de inicio NÃO podem ser uma data que ja passou!", "AVISO!", JOptionPane.WARNING_MESSAGE);
 			this.dateChooserInicio.setDate(null);
 			this.txtHoraInicio.setValue(null);
 			return true;
-		}*/
+		}
 		
 		if(dataFim.isBefore(LocalDateTime.now())) {
 			JOptionPane.showMessageDialog(this, "Date e horario de termino NÃO podem ser uma data que ja passou!", "AVISO!", JOptionPane.WARNING_MESSAGE);
@@ -348,7 +325,7 @@ public class AgendaWindow extends JFrame {
 				JOptionPane.showMessageDialog(this, "Compromisso excluido com sucesso!");
 				buscarCompromissos();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				
 				JOptionPane.showMessageDialog(this, "Um erro ocorreu durante a exclusão!", "ERRO", JOptionPane.ERROR_MESSAGE);
 				return;
 			}

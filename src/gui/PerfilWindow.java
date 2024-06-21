@@ -1,7 +1,5 @@
 package gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -64,24 +62,6 @@ public class PerfilWindow extends JFrame {
 	private String fotoPessoal;
 	private JButton btnSelecinarFoto;
 	private JLabel lblArquivoSelecionado;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Usuario murilo = new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "images/icons/default-pfp.jpg");
-					UsuarioWindow userFrame = new UsuarioWindow(murilo);
-					PerfilWindow frame = new PerfilWindow(userFrame, murilo);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.

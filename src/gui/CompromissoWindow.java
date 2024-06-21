@@ -1,24 +1,17 @@
 package gui;
 
-import java.awt.EventQueue;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.MaskFormatter;
 
-import entities.Agenda;
 import entities.Compromisso;
 import entities.Convite;
 import entities.StatusConvite;
@@ -34,11 +27,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
-import javax.swing.JTextField;
 import javax.swing.JScrollPane;
-import javax.swing.JFormattedTextField;
-import com.toedter.calendar.JDateChooser;
-import javax.swing.JTextArea;
 import java.awt.Font;
 import javax.swing.JSeparator;
 import javax.swing.border.TitledBorder;
@@ -59,29 +48,6 @@ public class CompromissoWindow extends JFrame {
 	private JLabel lblDataDaNotificao;
 	private JTable tableUsuariosConvidados;
 	private JComboBox cbUsuariosConvidaveis;
-
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					UsuarioWindow usuarioWindow = new UsuarioWindow(new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png"));
-//					Agenda agenda = new Agenda();
-//					Usuario murilo = new Usuario("murilinho", "123", "Murilo Vozniaki", new java.sql.Date(Long.valueOf("1718384913992")), "Masculino", "murilo@gmail.com", "murilo.png");
-//					agenda.setNomeAgenda("Agenda 1");
-//					AgendaWindow agendaWindow = new AgendaWindow(usuarioWindow, agenda);
-//					Compromisso comp1 = new Compromisso(1, "Comp 1", "Compromisso 1", Date.valueOf("2024-06-30"),"22:22",Date.valueOf("2024-06-30"),"23:00", "UTFPR",Date.valueOf("2024-06-30"),"22:00");
-//					CompromissoWindow frame = new CompromissoWindow(agendaWindow,comp1, murilo);
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-	
 	
 	private void retornarAgendaWindow() {
 		
