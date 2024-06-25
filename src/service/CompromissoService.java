@@ -201,9 +201,13 @@ public class CompromissoService {
 				dataTerminoFormatada = (String.valueOf(compromisso.getDataTermino()).isEmpty() || String.valueOf(compromisso.getDataTermino()).equals("null")) ? null : String.valueOf(sdf.format(compromisso.getDataTermino()));
 				dataNotificacaoFormatada = (String.valueOf(compromisso.getDataNotificacao()).isEmpty() || String.valueOf(compromisso.getDataNotificacao()).equals("null")) ? null : String.valueOf(sdf.format(compromisso.getDataNotificacao()));
 				
-				writer.write(compromisso.getTitulo() + SEPARADOR_CSV + compromisso.getDescricao() 
+				String titulo = compromisso.getTitulo().contains(";") ? compromisso.getTitulo().replaceAll(";", "|"): compromisso.getTitulo();
+				String descricao = compromisso.getDescricao().contains(";") ? compromisso.getDescricao().replaceAll(";", "|") : compromisso.getDescricao();
+				String local = compromisso.getLocal().contains(";") ? compromisso.getLocal().replaceAll(";", "|") : compromisso.getLocal();
+				
+				writer.write(titulo + SEPARADOR_CSV + descricao 
 					+ SEPARADOR_CSV + dataInicioFormatada + SEPARADOR_CSV + compromisso.getHorarioInicio() 
-					+ SEPARADOR_CSV + dataTerminoFormatada + SEPARADOR_CSV + compromisso.getHorarioTermino() + SEPARADOR_CSV + compromisso.getLocal() 
+					+ SEPARADOR_CSV + dataTerminoFormatada + SEPARADOR_CSV + compromisso.getHorarioTermino() + SEPARADOR_CSV + local 
 					+ SEPARADOR_CSV + dataNotificacaoFormatada + SEPARADOR_CSV + compromisso.getHorarioNotificacao() + "\n"
 				);
 			}
