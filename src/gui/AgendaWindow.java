@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -381,9 +382,15 @@ public class AgendaWindow extends JFrame {
 		novo.setDescricao(this.txtDescricao.getText().isBlank() ? antigo.getDescricao() : this.txtDescricao.getText());
 		novo.setLocal(this.txtLocal.getText().isBlank() ? antigo.getLocal() : this.txtLocal.getText());
 		
-		if(!this.txtHoraInicio.getText().isBlank() && !horaValida(this.txtHoraInicio.getText(), "Inicio")) return;
-		if(!this.txtHoraFim.getText().isBlank() && !horaValida(this.txtHoraFim.getText(), "Termino")) return;
-		if(!this.txtHoraNotificacao.getText().isBlank() && !horaValida(this.txtHoraNotificacao.getText(), "Notificação")) return;
+		if(!this.txtHoraInicio.getText().replaceAll(":", "").isBlank()) {
+			if(!horaValida(this.txtHoraInicio.getText(), "Inicio")) return;
+		}
+		if(!this.txtHoraFim.getText().replaceAll(":", "").isBlank() ) {
+			if(!horaValida(this.txtHoraFim.getText(), "Termino")) return;
+		}
+		if(!this.txtHoraNotificacao.getText().replaceAll(":", "").isBlank() ) {
+			if(!horaValida(this.txtHoraNotificacao.getText(), "Notificação")) return;
+		}
 		
 		if((this.dateChooserInicio.getDate() != null) && (this.dateChooserFim.getDate() != null) && (this.dateChooserNotificacao.getDate() != null)) {
 			if(this.possuiDataInvalida()) return;
@@ -531,7 +538,7 @@ public class AgendaWindow extends JFrame {
 		
 		JFileChooser chooser = new JFileChooser();
 		
-		FileNameExtensionFilter filtroCsv = new FileNameExtensionFilter("Arquivo CSV (.csv)", ".csv");
+		FileNameExtensionFilter filtroCsv = new FileNameExtensionFilter("Arquivo CSV (.csv)", "csv");
 		chooser.setFileFilter(filtroCsv);
 		
 		int res = chooser.showSaveDialog(this);
@@ -539,6 +546,13 @@ public class AgendaWindow extends JFrame {
 		if(res == JFileChooser.APPROVE_OPTION) {
 			
 			String caminho = chooser.getSelectedFile().getAbsolutePath();
+			
+			File f = new File(caminho);
+			
+			if(f.exists() && !f.isDirectory()) {
+				int ans = JOptionPane.showConfirmDialog(this, "Ja existe um arquivo com o mesmo nome no diretório escolhido!\nDeseja sobrescreve-lo?");
+				if(ans != JOptionPane.YES_OPTION) return;
+			}
 			
 			this.compromissoService.exportarArquivoCSV(caminho, this.agenda);
 			
@@ -554,7 +568,7 @@ public class AgendaWindow extends JFrame {
 		
 		JFileChooser chooser = new JFileChooser();
 		
-		FileNameExtensionFilter filtroCsv = new FileNameExtensionFilter("Arquivo CSV (.csv)", ".csv");
+		FileNameExtensionFilter filtroCsv = new FileNameExtensionFilter("Arquivo CSV (.csv)", "csv");
 		chooser.setFileFilter(filtroCsv);
 		
 		int res = chooser.showOpenDialog(this);
