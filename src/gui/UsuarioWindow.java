@@ -9,6 +9,7 @@ import entities.Convite;
 import entities.StatusConvite;
 import entities.Usuario;
 import service.AgendaService;
+import service.UsuarioService;
 import service.ConviteService;
 import service.NotificacaoService;
 
@@ -63,6 +64,17 @@ public class UsuarioWindow extends JFrame {
 					agenda.getNomeAgenda(),
 					agenda.getDescricao()
 			});
+		}
+	}
+	
+	public void atualizarUsuario() {
+		
+		try {
+		
+			Usuario user = new UsuarioService().buscarUsuarioPorId(this.usuarioLogado.getId());
+			this.usuarioLogado = user;
+		}catch(Exception e) {
+			return;
 		}
 	}
 	
