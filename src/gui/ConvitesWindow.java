@@ -172,7 +172,7 @@ public class ConvitesWindow extends JFrame {
 		
 		try {
 			this.convitesUsuario = conviteService.buscarConvitesPorIdConvidado(this.usuario.getId());
-			if(this.convitesUsuario == null) {
+			if(this.convitesUsuario == null || this.convitesUsuario.isEmpty()) {
 				JOptionPane.showMessageDialog(this, "Nenhum convite encontrado!");
 				return;
 			}
