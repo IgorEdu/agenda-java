@@ -69,6 +69,24 @@ public class CompromissoService {
 		return resultado.isEmpty() ? null : resultado;
 	}
 	
+	public List<Compromisso> buscarCompromissosPorUsuario(int idUsuario) throws SQLException, IOException{
+		Connection conn = BancoDados.conectar();
+		CompromissoAgendaDAO compromissoAgendaDAO = new CompromissoAgendaDAO(conn);
+		
+		List<Integer> listaIdCompromissos = new ArrayList<Integer>();
+		listaIdCompromissos = compromissoAgendaDAO.listarIdCompromissosPorUsuario(idUsuario);
+		
+		List<Compromisso> resultado = new ArrayList<Compromisso>();
+		
+		
+		for(Integer idCompromisso : listaIdCompromissos) {
+			Connection conn2 = BancoDados.conectar();
+			resultado.add(new CompromissoDAO(conn2).buscarCompromissoPorIdCompromisso(idCompromisso));
+		}
+		
+		return resultado.isEmpty() ? null : resultado;
+	}
+	
 	public int atualizarCompromisso(Compromisso compromisso) throws SQLException {
 		try {
 			Connection conn = BancoDados.conectar();
