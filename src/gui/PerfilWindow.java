@@ -162,6 +162,7 @@ public class PerfilWindow extends JFrame {
 	private void retornarUsuarioWindow() {
 		
 		usuarioWindow.setVisible(true);
+		usuarioWindow.atualizarUsuario();
 		setVisible(false);
 		dispose();
 	}
@@ -327,6 +328,7 @@ public class PerfilWindow extends JFrame {
 					user.setSenha(String.valueOf(this.txtSenhaNova.getPassword()));
 				}
 				
+				System.out.println(this.txtNomeCompleto.getText());
 				user.setNomeUsuario(this.txtNomeCompleto.getText()
 														.isBlank() ? usuario.getNomeUsuario(): this.txtNomeCompleto.getText());
 				
@@ -344,6 +346,7 @@ public class PerfilWindow extends JFrame {
 				usuarioService.atualizarUsuario(user);
 				
 				this.usuario = user;
+				preencherInformacoes();
 				this.cancelarEdicao();
 			} catch(Exception e) {
 				
