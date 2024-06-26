@@ -83,6 +83,36 @@ private Connection conn;
 		
 	}
 	
+	public CompromissoAgenda buscarCompromissoAgendaPorAgendaECompromisso(int idAgenda, int idCompromisso) throws SQLException, IOException{
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("select id, id_compromissos, id_agendas from compromissos_agendas where id_compromissos = ? and id_agendas = ?");
+			st.setInt(1, idCompromisso);
+			st.setInt(2, idAgenda);
+			
+			rs = st.executeQuery();
+			
+			if (rs.next()) {
+				
+				CompromissoAgenda compromissoAgenda = new CompromissoAgenda();
+				compromissoAgenda.setId(rs.getInt(1));
+				compromissoAgenda.setIdCompromisso(rs.getInt(2));
+				compromissoAgenda.setIdAgenda(rs.getInt(3));
+
+				return compromissoAgenda;
+			}
+			
+			return null;
+			
+		}  finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
 	
 	public CompromissoAgenda buscarCompromissoAgendaPorId(int idCompromissoAgenda) throws SQLException, IOException {
 		PreparedStatement st = null;
