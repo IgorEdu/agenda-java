@@ -178,4 +178,37 @@ public class ConviteDAO {
 			BancoDados.desconectar();
 		}
 	}
+	
+	public List<Convite> buscarConvitesPorIdCompromissoEIdUsuario(int idCompromisso, int idUsuario) throws SQLException, IOException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("select id, id_convidado, status, id_compromisso from convites where id_compromisso = ? and id_convidado = ?");
+			st.setInt(1, idCompromisso);
+			st.setInt(2, idUsuario);
+			
+			rs = st.executeQuery();
+			
+			List<Convite> listaConvites = new ArrayList<>();
+			
+			while (rs.next()) {
+				Convite convite = new Convite();
+				convite.setId(rs.getInt(1));
+				convite.getUsuario().setId(rs.getInt(2));
+				convite.setStatusConvite(StatusConvite.valueOf(rs.getString(3)));
+				convite.getCompromisso().setIdCompromisso(rs.getInt(4));			
+
+				listaConvites.add(convite);
+			}
+			
+			return listaConvites;
+			
+		}  finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
 }
