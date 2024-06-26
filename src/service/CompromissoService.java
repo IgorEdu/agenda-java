@@ -92,10 +92,11 @@ public class CompromissoService {
 	}
 
 	
-	public int excluirCompromisso(int idCompromisso) throws SQLException {
+	public int excluirCompromisso(int idCompromisso, int idAgenda) throws SQLException {
 		try {
 			Connection conn = BancoDados.conectar();
-			new CompromissoDAO(conn).excluir(idCompromisso);
+			int idCompromissoAgenda = new CompromissoAgendaDAO(conn).buscarCompromissoAgendaPorAgendaECompromisso(idAgenda, idCompromisso).getId();
+			new CompromissoAgendaDAO(BancoDados.conectar()).excluir(idCompromissoAgenda);
 			return 1;
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block
