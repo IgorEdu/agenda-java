@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JButton;
@@ -26,8 +27,10 @@ import entities.Agenda;
 import entities.Compromisso;
 import entities.Convite;
 import entities.StatusConvite;
+import entities.Usuario;
 import service.CompromissoService;
 import service.ConviteService;
+import entities.CompromissoAgenda;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -48,8 +51,10 @@ public class AgendaWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	
-	private MaskFormatter mascaraHora;
 	private Agenda agenda;
+	private Usuario usuario;
+	
+	private MaskFormatter mascaraHora;
 	private CompromissoService compromissoService;
 	private UsuarioWindow usuarioWindow;
 	private JTable tableCompromissos;
@@ -345,7 +350,23 @@ public class AgendaWindow extends JFrame {
 		if(res == JOptionPane.YES_OPTION) {
 			
 			try {
-				compromissoService.excluirCompromisso((int)tableCompromissos.getValueAt(tableCompromissos.getSelectedRow(), 0));
+				
+				List<Convite> convites = new ConviteService().buscarConvitesPorIdCompromissoEIdUsuario((int)tableCompromissos.getValueAt(tableCompromissos.getSelectedRow(), 0), this.usuario.getId());
+				
+				if(convites != null) {
+					
+					for(Convite convite : convites) {
+						
+						if(convite.getStatusConvite() == StatusConvite.ACEITO) {
+							
+							convite.setStatusConvite(StatusConvite.REJEITADO);
+							new ConviteService().atualizar(convite);
+						}
+					}
+				}
+				
+				compromissoService.excluirCompromisso((int)tableCompromissos.getValueAt(tableCompromissos.getSelectedRow(), 0), this.agenda.getIdAgenda());
+				
 				JOptionPane.showMessageDialog(this, "Compromisso excluido com sucesso!");
 				buscarCompromissos();
 			} catch (Exception e) {
@@ -610,10 +631,11 @@ public class AgendaWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AgendaWindow(UsuarioWindow usuarioWindow, Agenda agenda) {
+	public AgendaWindow(UsuarioWindow usuarioWindow, Agenda agenda, Usuario usuario) {
 		
 		this.usuarioWindow = usuarioWindow;
 		this.agenda = agenda;
+		this.usuario = usuario;
 		this.compromissoService = new CompromissoService();
 		criarMascaraHora();
 		initComponents();
