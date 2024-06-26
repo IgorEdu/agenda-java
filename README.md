@@ -7,9 +7,8 @@ Tecnologias usadas
 Configurando banco de dados:
 
 - Conectar ao MySQL com um usuário com permissão para criação e exclusão de databases e tabelas (CREATE e DROP)
-- Criar banco de dados (agenda-utfpr)
-- Restaurar backup:
-	mysql -u [usuario] -p agenda-utfpr < dump-agenda-utfpr.sql
+- Restaurar o backup localizado no diretorio "dump-db":
+	mysql -u [usuario] -p < dump-agenda-utfpr.sql
 
 - Configurar o arquivo database.properties (considerar a troca dos itens entre chaves)
 	user=[usuario]
@@ -17,3 +16,5 @@ Configurando banco de dados:
 	dburl=jdbc:mysql://[endereco]:[porta]/agenda-utfpr
 	useSSL=false
 	allowPublicKeyRetrieval=true
+
+- Acessar e executar a Classe App.java
