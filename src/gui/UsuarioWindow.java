@@ -171,7 +171,7 @@ public class UsuarioWindow extends JFrame {
 		if(e.getClickCount() == 2) {
 			
 			Agenda agendaSelecionada = agendaService.buscarAgendaPorId((int) this.tableAgendas.getValueAt(this.tableAgendas.getSelectedRow(), 0));
-			new AgendaWindow(this, agendaSelecionada).setVisible(true);
+			new AgendaWindow(this, agendaSelecionada, this.usuarioLogado).setVisible(true);
 			setVisible(false);
 		}
 		return;
