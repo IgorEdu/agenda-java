@@ -37,6 +37,7 @@ public class NotificacaoService extends Thread {
 		
 		List<Compromisso> compromissosUsuario = compromissoService.buscarCompromissosPorUsuario(usuario.getId());
 		
+		if(compromissosUsuario == null) return;
 //		for(Agenda agenda : agendasUsuario) {
 //			compromissosUsuario.addAll(compromissoService.buscarCompromissosAgenda(agenda.getIdAgenda()));
 //		}
