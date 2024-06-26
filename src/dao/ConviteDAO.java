@@ -127,14 +127,17 @@ public class ConviteDAO {
 			
 			List<Convite> listaConvites = new ArrayList<>();
 			
-			while (rs.next()) {
-				Convite convite = new Convite();
-				convite.setId(rs.getInt(1));
-				convite.getUsuario().setId(rs.getInt(2));
-				convite.setStatusConvite(StatusConvite.valueOf(rs.getString(3)));
-				convite.getCompromisso().setIdCompromisso(rs.getInt(4));			
-
-				listaConvites.add(convite);
+			if(rs.first()) {
+				
+				while (rs.next()) {
+					Convite convite = new Convite();
+					convite.setId(rs.getInt(1));
+					convite.getUsuario().setId(rs.getInt(2));
+					convite.setStatusConvite(StatusConvite.valueOf(rs.getString(3)));
+					convite.getCompromisso().setIdCompromisso(rs.getInt(4));			
+					
+					listaConvites.add(convite);
+				}
 			}
 			
 			return listaConvites;
