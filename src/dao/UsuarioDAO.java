@@ -57,8 +57,8 @@ public class UsuarioDAO {
 			st.setDate(4, usuario.getDataNascimento());
 			st.setString(5, usuario.getGenero());
 			st.setString(6, usuario.getEmail());
-			st.setInt(7, usuario.getId());
-			st.setString(8, usuario.getFotoPessoal());
+			st.setString(7, usuario.getFotoPessoal());
+			st.setInt(8, usuario.getId());
 			
 			st.executeUpdate();
 		} catch (SQLException e) {

@@ -4,19 +4,26 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import entities.Agenda;
+import entities.Convite;
 import entities.Usuario;
 import service.UsuarioService;
+import service.AgendaService;
+import service.ConviteService;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -162,6 +169,7 @@ public class PerfilWindow extends JFrame {
 	private void retornarUsuarioWindow() {
 		
 		usuarioWindow.setVisible(true);
+		usuarioWindow.atualizarUsuario();
 		setVisible(false);
 		dispose();
 	}
@@ -171,6 +179,32 @@ public class PerfilWindow extends JFrame {
 		int res = JOptionPane.showConfirmDialog(this, "Deseja mesmo excluir sua conta?\nTodos os seus compromissos serão perdido para SEMPRE.");
 		
 		if(res == JOptionPane.YES_OPTION) {
+			
+			List<Agenda> agendas = new AgendaService().buscarAgendasUsuario(usuario);
+			
+			if(agendas != null) {
+				
+				for(Agenda agenda : agendas) {
+					
+					new AgendaService().excluirAgenda(agenda.getIdAgenda());
+				}
+			}
+			
+			try {
+				List<Convite> convites = new ConviteService().buscarConvitesPorIdConvidado(this.usuario.getId());
+				
+				if(convites != null) {
+					
+					for(Convite convite : convites) {
+						
+						new ConviteService().excluir(convite);
+					}
+				}
+			} catch (SQLException | IOException e) {
+				// TODO Auto-generated catch block
+				JOptionPane.showMessageDialog(this, "Um ocorreu ao deletar os convites do usuario!", "ERRO", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			
 			usuarioService.excluirUsuario(usuario);
 			JOptionPane.showMessageDialog(this, "Exclusão Concluída com Sucesso!");
@@ -327,6 +361,7 @@ public class PerfilWindow extends JFrame {
 					user.setSenha(String.valueOf(this.txtSenhaNova.getPassword()));
 				}
 				
+				System.out.println(this.txtNomeCompleto.getText());
 				user.setNomeUsuario(this.txtNomeCompleto.getText()
 														.isBlank() ? usuario.getNomeUsuario(): this.txtNomeCompleto.getText());
 				
@@ -344,6 +379,7 @@ public class PerfilWindow extends JFrame {
 				usuarioService.atualizarUsuario(user);
 				
 				this.usuario = user;
+				preencherInformacoes();
 				this.cancelarEdicao();
 			} catch(Exception e) {
 				

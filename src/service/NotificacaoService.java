@@ -27,17 +27,20 @@ public class NotificacaoService extends Thread {
 	private void notificarUsuario(Usuario usuario) throws SQLException, IOException {
 		SimpleDateFormat data = new SimpleDateFormat("yyyy-MM-dd");
 		
-		AgendaService agendaService = new AgendaService();
+//		AgendaService agendaService = new AgendaService();
 		CompromissoService compromissoService = new CompromissoService();
-		List<Agenda> agendasUsuario = new ArrayList<Agenda>();
+//		List<Agenda> agendasUsuario = new ArrayList<Agenda>();
 		
-		agendasUsuario = agendaService.buscarAgendasUsuario(usuario);
+//		agendasUsuario = agendaService.buscarAgendasUsuario(usuario);
 		
-		List<Compromisso> compromissosUsuario = new ArrayList<Compromisso>();
+//		List<Compromisso> compromissosUsuario = new ArrayList<Compromisso>();
 		
-		for(Agenda agenda : agendasUsuario) {
-			compromissosUsuario.addAll(compromissoService.buscarCompromissosAgenda(agenda.getIdAgenda()));
-		}
+		List<Compromisso> compromissosUsuario = compromissoService.buscarCompromissosPorUsuario(usuario.getId());
+		
+		if(compromissosUsuario == null) return;
+//		for(Agenda agenda : agendasUsuario) {
+//			compromissosUsuario.addAll(compromissoService.buscarCompromissosAgenda(agenda.getIdAgenda()));
+//		}
 		
 		for(Compromisso compromisso : compromissosUsuario) {
 			if(compromisso.getDataNotificacao() != null) {

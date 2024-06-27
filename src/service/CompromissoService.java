@@ -69,6 +69,15 @@ public class CompromissoService {
 		return resultado.isEmpty() ? null : resultado;
 	}
 	
+	public List<Compromisso> buscarCompromissosPorUsuario(int idUsuario) throws SQLException, IOException{
+		Connection conn = BancoDados.conectar();
+		CompromissoDAO compromissoDAO = new CompromissoDAO(conn);
+		
+		List<Compromisso> resultado = compromissoDAO.buscarCompromissosPorUsuario(idUsuario);
+		
+		return resultado.isEmpty() ? null : resultado;
+	}
+	
 	public int atualizarCompromisso(Compromisso compromisso) throws SQLException {
 		try {
 			Connection conn = BancoDados.conectar();
@@ -83,10 +92,11 @@ public class CompromissoService {
 	}
 
 	
-	public int excluirCompromisso(int idCompromisso) throws SQLException {
+	public int excluirCompromisso(int idCompromisso, int idAgenda) throws SQLException {
 		try {
 			Connection conn = BancoDados.conectar();
-			new CompromissoDAO(conn).excluir(idCompromisso);
+			int idCompromissoAgenda = new CompromissoAgendaDAO(conn).buscarCompromissoAgendaPorAgendaECompromisso(idAgenda, idCompromisso).getId();
+			new CompromissoAgendaDAO(BancoDados.conectar()).excluir(idCompromissoAgenda);
 			return 1;
 		} catch (SQLException | IOException e) {
 			// TODO Auto-generated catch block

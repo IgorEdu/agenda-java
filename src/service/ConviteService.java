@@ -63,4 +63,14 @@ public class ConviteService {
 		
 		return convites;
 	}
+	
+	public List<Convite> buscarConvitesPorIdCompromissoEIdUsuario(int idCompromisso, int idUsuario) throws SQLException, IOException{
+		
+		List<Convite> convites = null;
+		
+		Connection conn = BancoDados.conectar();
+		convites = new ConviteDAO(conn).buscarConvitesPorIdCompromissoEIdUsuario(idCompromisso, idUsuario);
+		
+		return convites;
+	}
 }

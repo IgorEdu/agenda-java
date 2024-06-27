@@ -8,8 +8,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import entities.Compromisso;
+import entities.Agenda;
 import entities.CompromissoAgenda;
+import entities.Usuario;
+import service.AgendaService;
+import service.UsuarioService;
 
 
 public class CompromissoAgendaDAO {
@@ -80,6 +83,36 @@ private Connection conn;
 		
 	}
 	
+	public CompromissoAgenda buscarCompromissoAgendaPorAgendaECompromisso(int idAgenda, int idCompromisso) throws SQLException, IOException{
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("select id, id_compromissos, id_agendas from compromissos_agendas where id_compromissos = ? and id_agendas = ?");
+			st.setInt(1, idCompromisso);
+			st.setInt(2, idAgenda);
+			
+			rs = st.executeQuery();
+			
+			if (rs.next()) {
+				
+				CompromissoAgenda compromissoAgenda = new CompromissoAgenda();
+				compromissoAgenda.setId(rs.getInt(1));
+				compromissoAgenda.setIdCompromisso(rs.getInt(2));
+				compromissoAgenda.setIdAgenda(rs.getInt(3));
+
+				return compromissoAgenda;
+			}
+			
+			return null;
+			
+		}  finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
 	
 	public CompromissoAgenda buscarCompromissoAgendaPorId(int idCompromissoAgenda) throws SQLException, IOException {
 		PreparedStatement st = null;
@@ -136,6 +169,54 @@ private Connection conn;
 			return idsCompromissos;
 			
 		}  finally {
+
+			BancoDados.finalizarStatement(st);
+			BancoDados.finalizarResultSet(rs);
+			BancoDados.desconectar();
+		}
+	}
+
+	public List<Integer> listarIdCompromissosPorUsuario(int idUsuario) throws SQLException, IOException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		AgendaService agendaService = new AgendaService();
+		UsuarioService usuarioService = new UsuarioService();
+		
+		Usuario usuario = usuarioService.buscarUsuarioPorId(idUsuario);
+		
+		List<Integer> idsCompromissos = new ArrayList<>();
+		
+		List<Agenda> agendasUsuario = new ArrayList<Agenda>();
+		List<Integer> idsAgendasUsuario = new ArrayList<Integer>();
+		
+		agendasUsuario = agendaService.buscarAgendasUsuario(usuario);
+		for(Agenda agenda : agendasUsuario) {
+			idsAgendasUsuario.add(agenda.getIdAgenda());
+		}
+
+		try {
+			for(Integer idAgenda : idsAgendasUsuario) {
+				st = conn.prepareStatement("select id, id_compromissos, id_agendas from compromissos_agendas where id_agendas in ?");
+				st.setInt(1, idAgenda);
+				
+				rs = st.executeQuery();
+				
+				while (rs.next()) {
+					
+					CompromissoAgenda compromissoAgenda = new CompromissoAgenda();
+					compromissoAgenda.setId(rs.getInt(1));
+					compromissoAgenda.setIdCompromisso(rs.getInt(2));
+					compromissoAgenda.setIdAgenda(rs.getInt(3));
+
+					idsCompromissos.add(compromissoAgenda.getIdCompromisso());
+				}
+			}
+			
+			
+			return idsCompromissos;
+			
+		}
+		finally {
 
 			BancoDados.finalizarStatement(st);
 			BancoDados.finalizarResultSet(rs);

@@ -9,6 +9,7 @@ import entities.Convite;
 import entities.StatusConvite;
 import entities.Usuario;
 import service.AgendaService;
+import service.UsuarioService;
 import service.ConviteService;
 import service.NotificacaoService;
 
@@ -63,6 +64,17 @@ public class UsuarioWindow extends JFrame {
 					agenda.getNomeAgenda(),
 					agenda.getDescricao()
 			});
+		}
+	}
+	
+	public void atualizarUsuario() {
+		
+		try {
+		
+			Usuario user = new UsuarioService().buscarUsuarioPorId(this.usuarioLogado.getId());
+			this.usuarioLogado = user;
+		}catch(Exception e) {
+			return;
 		}
 	}
 	
@@ -171,7 +183,7 @@ public class UsuarioWindow extends JFrame {
 		if(e.getClickCount() == 2) {
 			
 			Agenda agendaSelecionada = agendaService.buscarAgendaPorId((int) this.tableAgendas.getValueAt(this.tableAgendas.getSelectedRow(), 0));
-			new AgendaWindow(this, agendaSelecionada).setVisible(true);
+			new AgendaWindow(this, agendaSelecionada, this.usuarioLogado).setVisible(true);
 			setVisible(false);
 		}
 		return;
