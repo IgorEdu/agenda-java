@@ -64,6 +64,8 @@ public class ConvitesWindow extends JFrame {
 		this.btnAceitar.setEnabled(true);
 		this.btnRecusar.setEnabled(true);
 		
+		buscarConvitesUsuario();
+		
 		DefaultTableModel modelo = (DefaultTableModel) this.tableConvites.getModel();
 		modelo.fireTableDataChanged();
 		modelo.setRowCount(0);
@@ -124,6 +126,8 @@ public class ConvitesWindow extends JFrame {
 		this.btnTodos.setEnabled(false);
 		this.btnAceitar.setEnabled(false);
 		this.btnRecusar.setEnabled(false);
+		
+		buscarConvitesUsuario();
 		
 		DefaultTableModel modelo = (DefaultTableModel) this.tableConvites.getModel();
 		modelo.fireTableDataChanged();
